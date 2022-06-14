@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import Start from '../Start';
+import Quiz from '../Quiz';
 
 function App() {
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [apiUrl, setApiUrl] = useState("")
+
   return (
-    <Start />
+    isPlaying ? <Quiz />
+    :
+    <Start
+      handleStartGame={setIsPlaying}
+      setApiUrl={setApiUrl}
+    />
   );
 }
 
