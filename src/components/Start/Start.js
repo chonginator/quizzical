@@ -3,29 +3,26 @@ import React, { useEffect, useState } from 'react';
 import {
     baseUrl,
     categoryUrl,
+    amounts,
+    difficulties,
+    types
 } from '../../constants';
 import useFetch from '../../hooks/useFetch';
 import ControlPane from '../ControlPane';
 import Button from '../Button';
 
-import {
-    amountOptions,
-    difficultyOptions,
-    typeOptions
-} from './Start.helpers';
-
 function Start({ handleStartGame, setApiUrl }) {
     const { data, error, loading } = useFetch(categoryUrl)
-    const [category, setCategoryId] = useState(0)
-    const [amount, setAmount] = useState(amountOptions[0]['name'])
-    const [difficulty, setDifficulty] = useState("")
-    const [type, setType] = useState("")
+    const [categoryId, setCategoryId] = useState(0)
+    const [amount, setAmount] = useState(amounts[0])
+    const [difficulty, setDifficulty] = useState(difficulties[0])
+    const [type, setType] = useState(types[0])
 
     useEffect(() => {
         setApiUrl(
             baseUrl +
             new URLSearchParams({
-                category,
+                categoryId,
                 amount,
                 difficulty,
                 type
@@ -33,7 +30,7 @@ function Start({ handleStartGame, setApiUrl }) {
         )
     },
     [
-        category,
+        categoryId,
         amount,
         difficulty,
         type,
@@ -49,27 +46,27 @@ function Start({ handleStartGame, setApiUrl }) {
             <ControlPane
                 title="Category"
                 options={data['trivia_categories'] ?? []}
-                currentOption={category}
+                currentOption={categoryId}
                 handleSelectOption={setCategoryId}
             />
 
             <ControlPane
                 title="Number of Questions"
-                options={amountOptions}
+                options={amounts}
                 currentOption={amount}
                 handleSelectOption={setAmount}
             />
 
             <ControlPane
                 title="Difficulty"
-                options={difficultyOptions}
+                options={difficulties}
                 currentOption={difficulty}
                 handleSelectOption={setDifficulty}
             />
 
             <ControlPane
                 title="Question Type"
-                options={typeOptions}
+                options={types}
                 currentOption={type}
                 handleSelectOption={setType}
             />
