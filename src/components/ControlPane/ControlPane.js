@@ -8,23 +8,21 @@ function ControlPane({
     currentOption,
     handleSelectOption
 }) {
-    console.info('options: ' + JSON.stringify(options))
+    // console.info('options: ' + JSON.stringify(options))
     return (
         <div>
             <h2>{title}</h2>
             <ButtonRow>
-                {options.map(option => {
-                    const { id, name } = option
-
+                {options.map(({ id, label }) => {
                     return (
                         <ToggleButton 
-                            key={id ?? option}
-                            selected={currentOption === id ?? option}
+                            key={id}
+                            selected={currentOption === id}
                             // Need to pass id to handleSelectOption for categories
                             // But need to pass name to others
-                            onClick={() => handleSelectOption(id ?? option)}
+                            onClick={() => handleSelectOption(id)}
                         >
-                            {name ?? option}
+                            {label}
                         </ToggleButton>
                     )
                 })}

@@ -1,28 +1,38 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import {
     baseUrl,
     categoryUrl,
-    amounts,
-    difficulties,
-    types
 } from '../../constants';
+
+import {
+    amountOptions,
+    difficultyOptions,
+    typeOptions
+} from './Start.helpers';
+
 import useFetch from '../../hooks/useFetch';
 import ControlPane from '../ControlPane';
 import Button from '../Button';
 
 function Start({ handleStartGame, setApiUrl }) {
-    const { data, error, loading } = useFetch(categoryUrl)
-    const [categoryId, setCategoryId] = useState(0)
-    const [amount, setAmount] = useState(amounts[0])
-    const [difficulty, setDifficulty] = useState(difficulties[0])
-    const [type, setType] = useState(types[0])
+    const { data: categories, error, loading } = useFetch(categoryUrl)
+    const [categoryOptions, setCategoryOptions] = useState(null)
+    const [category, setCategoryId] = useState("")
+    const [amount, setAmount] = useState(amountOptions[0].id)
+    const [difficulty, setDifficulty] = useState(difficultyOptions[0].id)
+    const [type, setType] = useState(typeOptions[0].id)
+
+    // console.log(`current category: ${category}`)
+    // console.log(`current amount: ${amount}`)
+    // console.log(`current difficulty: ${difficulty}`)
+    // console.log(`current type: ${type}`)
 
     useEffect(() => {
         setApiUrl(
             baseUrl +
             new URLSearchParams({
-                categoryId,
+                category,
                 amount,
                 difficulty,
                 type
@@ -30,12 +40,25 @@ function Start({ handleStartGame, setApiUrl }) {
         )
     },
     [
-        categoryId,
+        category,
         amount,
         difficulty,
         type,
         setApiUrl
     ])
+
+    useEffect(() => {
+        if (categories) {
+            setCategoryOptions(
+                [{ id: "", label: "Any Category"}].concat( // Add any option
+                    categories['trivia_categories'].map(({ id, name }) => ({
+                        id,
+                        label: name
+                    }))
+                )
+            )
+        }
+    }, [categories])
 
     return (
         <main>
@@ -45,28 +68,28 @@ function Start({ handleStartGame, setApiUrl }) {
 
             <ControlPane
                 title="Category"
-                options={data['trivia_categories'] ?? []}
-                currentOption={categoryId}
+                options={categoryOptions ?? []}
+                currentOption={category}
                 handleSelectOption={setCategoryId}
             />
 
             <ControlPane
                 title="Number of Questions"
-                options={amounts}
+                options={amountOptions}
                 currentOption={amount}
                 handleSelectOption={setAmount}
             />
 
             <ControlPane
                 title="Difficulty"
-                options={difficulties}
+                options={difficultyOptions}
                 currentOption={difficulty}
                 handleSelectOption={setDifficulty}
             />
 
             <ControlPane
                 title="Question Type"
-                options={types}
+                options={typeOptions}
                 currentOption={type}
                 handleSelectOption={setType}
             />
