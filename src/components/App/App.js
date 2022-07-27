@@ -7,8 +7,10 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [apiUrl, setApiUrl] = useState("")
 
+  // console.log(apiUrl)
+
   return (
-    isPlaying ? <Quiz />
+    isPlaying ? <Quiz apiUrl={apiUrl}/>
     :
     <Start
       handleStartGame={setIsPlaying}

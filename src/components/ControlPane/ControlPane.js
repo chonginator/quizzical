@@ -6,6 +6,7 @@ function ControlPane({
     title,
     options,
     currentOption,
+    disabled,
     handleSelectOption
 }) {
     // console.info('options: ' + JSON.stringify(options))
@@ -20,6 +21,7 @@ function ControlPane({
                             selected={currentOption === id}
                             // Need to pass id to handleSelectOption for categories
                             // But need to pass name to others
+                            disabled={disabled}
                             onClick={() => handleSelectOption(id)}
                         >
                             {label}
