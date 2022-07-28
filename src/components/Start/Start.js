@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 
 import {
     baseUrl,
@@ -16,6 +17,7 @@ import ControlPane from '../ControlPane';
 import Button from '../Button';
 
 function Start({ handleStartGame, setApiUrl }) {
+    // Cache categories data in localStorage
     const { data: categories, error, loading } = useFetch(categoryUrl)
     const [categoryOptions, setCategoryOptions] = useState(null)
     const [category, setCategoryId] = useState("")
@@ -62,9 +64,9 @@ function Start({ handleStartGame, setApiUrl }) {
 
     return (
         <main>
-            <h1>Quizzical</h1>
+            <Title>Quizzical</Title>
 
-            <p>Let's get quizzical</p>
+            <Subtitle>Let's get quizzical</Subtitle>
 
             <ControlPane
                 title="Category"
@@ -94,9 +96,20 @@ function Start({ handleStartGame, setApiUrl }) {
                 handleSelectOption={setType}
             />
 
-            <Button onClick={() => handleStartGame(true)} />
+            <Button onClick={() => handleStartGame(true)}>
+                Start quiz
+            </Button>
         </main>
     )
 }
+
+const Title = styled.h1`
+    font-family: var(--font-family-primary);
+`
+
+const Subtitle = styled.p`
+    font-family: var(--font-family-secondary);
+
+`
 
 export default Start;

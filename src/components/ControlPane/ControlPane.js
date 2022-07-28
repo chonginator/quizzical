@@ -1,4 +1,6 @@
 import React from 'react';
+import styled from 'styled-components';
+
 import ButtonRow from '../ButtonRow';
 import ToggleButton from '../ToggleButton';
 
@@ -12,13 +14,13 @@ function ControlPane({
     // console.info('options: ' + JSON.stringify(options))
     return (
         <div>
-            <h2>{title}</h2>
+            <Title>{title}</Title>
             <ButtonRow>
                 {options.map(({ id, label }) => {
                     return (
                         <ToggleButton 
                             key={id}
-                            selected={currentOption === id}
+                            isSelected={currentOption === id}
                             // Need to pass id to handleSelectOption for categories
                             // But need to pass name to others
                             disabled={disabled}
@@ -33,5 +35,10 @@ function ControlPane({
 
     )
 }
+
+const Title = styled.p`
+    font-family: var(--font-family-primary);
+    font-weight: var(--font-weight-bold);
+`
 
 export default ControlPane;

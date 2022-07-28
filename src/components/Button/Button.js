@@ -1,11 +1,13 @@
-import React from 'react';
+import styled from 'styled-components';
 
-function Button({ ...delegated }) {
-    return (
-        <button {...delegated}>
-            Start Quiz
-        </button>
-    )
-}
+const Button = styled.button`
+    font-family: var(--font-family-secondary);
+    font-weight: var(--font-weight-semiBold);
+    background-color: var(--colour-button);
+    color: var(--colour-background);
+    border: none;
+    border-radius: 0.9375em;
+    padding: 0.5625em 1.125em;
+`
 
 export default Button;
