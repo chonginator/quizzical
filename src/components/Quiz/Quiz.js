@@ -9,10 +9,10 @@ import ControlPane from '../ControlPane';
 import Button from '../Button';
 
 function Quiz({ handleStartGame, apiUrl }) {
-    const { data, error, loading } = useFetch(apiUrl)
+    const [isGameOver, setIsGameOver] = useState(false)
+    const { data, error, loading } = useFetch(apiUrl, [isGameOver])
     const [questionData, setQuestionData] = useState([])
     const [score, setScore] = useState(0)
-    const [isGameOver, setIsGameOver] = useState(false)
 
     // Format data for rendering
     useEffect(() => {
@@ -55,7 +55,7 @@ function Quiz({ handleStartGame, apiUrl }) {
     
     return (
         <main>
-            {
+            <div>{
                 questionData.map(
                     ({ questionId, question, answers, selectedAnswer}) => {
                         return (
@@ -76,37 +76,45 @@ function Quiz({ handleStartGame, apiUrl }) {
                             />
                         )
                     })
-            }
-
-            <div>
-                {
-                    !isGameOver ?
-                        <div>
-                            <SmallButton onClick={() => setIsGameOver(true)}>
-                                Check answers
-                            </SmallButton>
-                        </div>
-                        :
-                        <div>
-                            <Score>You scored: {score}/{questionData.length} correct answers</Score>
-                            <div>
-                                <SmallButton onClick={() => setIsGameOver(false)}>Play again</SmallButton>
-                                <SmallButton onClick={() => handleStartGame(false)}>Menu</SmallButton>
-                            </div>
-                        </div>
                 }
             </div>
+
+            {
+                !isGameOver ?
+                    <QuizFooter>
+                        <Button onClick={() => setIsGameOver(true)}>
+                            Check answers
+                        </Button>
+                    </QuizFooter>
+                    :
+                    <QuizFooter>
+                        <Score>You scored: {score}/{questionData.length} correct answers</Score>
+                        <ButtonWrapper>
+                            <Button onClick={() => setIsGameOver(false)}>Play again</Button>
+                            <Button onClick={() => handleStartGame(false)}>Menu</Button>
+                        </ButtonWrapper>
+                    </QuizFooter>
+            }
         </main>
     )
 }
 
-const SmallButton = styled(Button)`
-    font-size: 0.64rem;
+const QuizFooter = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.9em;
+    margin-top: 1.2em;
+`
+
+const ButtonWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+    gap: 0.9em;
 `
 
 const Score = styled.p`
     font-family: var(--font-family-secondary);
-    font-size: 0.8rem;
     font-weight: var(--font-weight-bold);
 `
 

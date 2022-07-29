@@ -20,13 +20,13 @@ function ToggleButton({
 
 const Button = styled.button`
     font-family: var(--font-family-secondary);
-    font-size: 0.64rem;
+    font-size: 0.9rem;
     font-weight: var(--font-weight-medium);
     color: var(--colour-text);
     background-color: ${p => p.isSelected ?
         `var(--colour-button-highlight)`: `var(--colour-background)`};
-    border: 0.79px solid var(--colour-button);
-    border-radius: 7.94px;
+    border: ${p => p.isSelected ? 'none' : '0.79px solid var(--colour-button)'};
+    border-radius: 10px;
     padding: 0.5625em 1.125em;
     cursor: pointer;
 

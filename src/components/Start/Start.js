@@ -63,53 +63,69 @@ function Start({ handleStartGame, setApiUrl }) {
     }, [categories])
 
     return (
-        <main>
+        <Wrapper>
             <Title>Quizzical</Title>
 
             <Subtitle>Let's get quizzical</Subtitle>
 
-            <ControlPane
-                title="Category"
-                options={categoryOptions ?? []}
-                currentOption={category}
-                handleSelectOption={setCategoryId}
-            />
+            <div>
+                <ControlPane
+                    title="Category"
+                    options={categoryOptions ?? []}
+                    currentOption={category}
+                    handleSelectOption={setCategoryId}
+                />
 
-            <ControlPane
-                title="Number of Questions"
-                options={amountOptions}
-                currentOption={amount}
-                handleSelectOption={setAmount}
-            />
+                <ControlPane
+                    title="Number of Questions"
+                    options={amountOptions}
+                    currentOption={amount}
+                    handleSelectOption={setAmount}
+                />
 
-            <ControlPane
-                title="Difficulty"
-                options={difficultyOptions}
-                currentOption={difficulty}
-                handleSelectOption={setDifficulty}
-            />
+                <ControlPane
+                    title="Difficulty"
+                    options={difficultyOptions}
+                    currentOption={difficulty}
+                    handleSelectOption={setDifficulty}
+                />
 
-            <ControlPane
-                title="Question Type"
-                options={typeOptions}
-                currentOption={type}
-                handleSelectOption={setType}
-            />
+                <ControlPane
+                    title="Question Type"
+                    options={typeOptions}
+                    currentOption={type}
+                    handleSelectOption={setType}
+                />
 
-            <Button onClick={() => handleStartGame(true)}>
+            </div>
+
+            <StartButton onClick={() => handleStartGame(true)}>
                 Start quiz
-            </Button>
-        </main>
+            </StartButton>
+        </Wrapper>
     )
 }
 
+const Wrapper = styled.main`
+    display: flex;
+    flex-direction: column;
+`
+
 const Title = styled.h1`
     font-family: var(--font-family-primary);
+    font-size: 2.3rem;
+    text-align: center;
 `
 
 const Subtitle = styled.p`
     font-family: var(--font-family-secondary);
-
+    text-align: center;
 `
 
+const StartButton = styled(Button)`
+    margin-top: 1em;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1em 2.5em;
+`
 export default Start;

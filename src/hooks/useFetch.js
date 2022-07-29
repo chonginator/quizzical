@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-function useFetch(url) {
+function useFetch(url, deps=[]) {
     const [data, setData] = useState(null)
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
@@ -20,7 +20,7 @@ function useFetch(url) {
         }
 
         fetchMyAPI()
-    }, [url])
+    }, deps)
 
     return {data, error, loading}
 }

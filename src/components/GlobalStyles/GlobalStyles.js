@@ -2,7 +2,8 @@ import { createGlobalStyle } from 'styled-components';
 import {
     FAMILIES,
     COLOURS,
-    WEIGHTS
+    WEIGHTS,
+    QUERIES
 } from '../../constants';
 
 const GlobalStyles = createGlobalStyle`
@@ -49,8 +50,11 @@ const GlobalStyles = createGlobalStyle`
     /*
         7. Remove built-in form typography styles
     */
-    input, button, textarea, select {
+    input, button, textarea, select, a {
         font: inherit;
+        
+        /* Remove blue highlight around clickable elements */
+        -webkit-tap-highlight-color: transparent;
     }
 
     /*
@@ -81,6 +85,7 @@ const GlobalStyles = createGlobalStyle`
 
         --colour-background: ${COLOURS.background};
         --colour-text: ${COLOURS.text};
+        --colour-border: ${COLOURS.border};
         --colour-button: ${COLOURS.button};
         --colour-button-highlight: ${COLOURS.buttonHighlight};
         --colour-button-disabled: ${COLOURS.buttonDisabled};
@@ -90,11 +95,18 @@ const GlobalStyles = createGlobalStyle`
     }
 
     /* My global styles */
+    html {
+        font-size: 0.75rem;
+        
+        @media ${QUERIES.tabletAndUp} {
+            font-size: 0.8rem;
+        }
+    }
+
     body {
         background-color: var(--colour-background);
         color: var(--colour-text);
     }
-
 `
 
 export default GlobalStyles;

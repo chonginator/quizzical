@@ -16,23 +16,35 @@ export const types = ['multiple', 'boolean'];
 // Font families
 export const FAMILIES = {
     primary: '"Karla", sans-serif',
-    secondary: '"Inter", sans-serif'
+    secondary: '"Inter", sans-serif',
 };
 
 // Colours
 export const COLOURS = {
     background: 'hsl(220, 43%, 97%)',
     text: 'hsl(231, 42%, 28%)',
+    border: 'hsl(231, 42%, 90%)',
     button: 'hsl(230, 34%, 46%)',
     buttonHighlight: 'hsl(230, 61%, 90%)',
     buttonDisabled: 'hsl(233, 17%, 63%)',
     correct: 'hsl(133, 46%, 71%)',
-    incorrect: 'hsl(360, 81%, 85%)'
+    incorrect: 'hsl(360, 81%, 85%)',
 };
 
+// Font weights
 export const WEIGHTS = {
     regular: 400,
     medium: 500,
     semiBold: 600,
-    bold: 700
+    bold: 700,
+}
+
+// Media query breakpoints
+export const BREAKPOINTS = {
+    tabletMin: 550,
+}
+
+// Media queries
+export const QUERIES = {
+    tabletAndUp: `(min-width: ${BREAKPOINTS.tabletMin}px)`,
 }
