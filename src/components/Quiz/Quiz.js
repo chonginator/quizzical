@@ -10,10 +10,15 @@ import Button from '../Button';
 
 function Quiz({ handleStartGame, apiUrl }) {
     const [isGameOver, setIsGameOver] = useState(false)
-    const { data, error, loading } = useFetch(apiUrl, [isGameOver])
+    // const { data, error, loading } = useFetch(apiUrl)
+    const { fetchMyAPI, data, error, loading } = useFetch()
     const [questionData, setQuestionData] = useState([])
     const [score, setScore] = useState(0)
 
+    useEffect(() => {
+        fetchMyAPI(apiUrl)
+    }, [])
+    
     // Format data for rendering
     useEffect(() => {
         if (data) {
@@ -53,6 +58,13 @@ function Quiz({ handleStartGame, apiUrl }) {
         )
     }, [questionData])
     
+    const handlePlayAgain = () => {
+        setIsGameOver(false)
+        fetchMyAPI(apiUrl)
+    }
+    
+    console.log(data)
+    
     return (
         <main>
             <div>{
@@ -80,7 +92,7 @@ function Quiz({ handleStartGame, apiUrl }) {
             </div>
 
             {
-                !isGameOver ?
+                !loading && (!isGameOver ?
                     <QuizFooter>
                         <Button onClick={() => setIsGameOver(true)}>
                             Check answers
@@ -90,10 +102,11 @@ function Quiz({ handleStartGame, apiUrl }) {
                     <QuizFooter>
                         <Score>You scored: {score}/{questionData.length} correct answers</Score>
                         <ButtonWrapper>
-                            <Button onClick={() => setIsGameOver(false)}>Play again</Button>
+                            <Button onClick={handlePlayAgain}>Play again</Button>
                             <Button onClick={() => handleStartGame(false)}>Menu</Button>
                         </ButtonWrapper>
                     </QuizFooter>
+                )
             }
         </main>
     )

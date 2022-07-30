@@ -18,7 +18,8 @@ import Button from '../Button';
 
 function Start({ handleStartGame, setApiUrl }) {
     // Cache categories data in localStorage
-    const { data: categories, error, loading } = useFetch(categoryUrl)
+    const { fetchMyAPI, data: categories, error, loading } = useFetch()
+    // const { data: categories, error, loading } = useFetch(categoryUrl)
     const [categoryOptions, setCategoryOptions] = useState(null)
     const [category, setCategoryId] = useState("")
     const [amount, setAmount] = useState(amountOptions[0].id)
@@ -29,6 +30,10 @@ function Start({ handleStartGame, setApiUrl }) {
     // console.log(`current amount: ${amount}`)
     // console.log(`current difficulty: ${difficulty}`)
     // console.log(`current type: ${type}`)
+    
+    useEffect(() => {
+        fetchMyAPI(categoryUrl)
+    }, [])
 
     useEffect(() => {
         setApiUrl(
