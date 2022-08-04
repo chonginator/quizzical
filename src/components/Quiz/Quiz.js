@@ -5,80 +5,124 @@ import he from 'he';
 
 import { shuffle } from '../../utils';
 import useFetch from '../../hooks/useFetch';
-import ControlPane from '../ControlPane';
+import QuestionPane from '../QuestionPane';
 import Button from '../Button';
 
 function Quiz({ handleStartGame, apiUrl }) {
     const [isGameOver, setIsGameOver] = useState(false)
     // const { data, error, loading } = useFetch(apiUrl)
-    const { fetchMyAPI, data, error, loading } = useFetch()
-    const [questionData, setQuestionData] = useState([])
-    const [score, setScore] = useState(0)
+    const { fetchMyAPI, error, loading } = useFetch()
+    const [quizData, setQuizData] = useState([])
+    // const [score, setScore] = useState(0)
 
     useEffect(() => {
-        fetchMyAPI(apiUrl)
+        (async () => {
+            const data = await fetchMyAPI(apiUrl)
+
+            if (!error) {
+                setQuizData(
+                    data.results.map(({
+                            question,
+                            correct_answer,
+                            incorrect_answers
+                        }, index) => {
+                            const correctAnswer = he.decode(correct_answer)
+                            const incorrectAnswers = incorrect_answers.map(
+                                answer => he.decode(answer)
+                            )
+                            const answers = shuffle(
+                                [correctAnswer, ...incorrectAnswers]
+                            ).map(answer => ({id: answer, label: answer}))
+
+                            return ({
+                                questionId: index,
+                                question: he.decode(question),
+                                answers: answers,
+                                correctAnswer: correctAnswer,
+                                selectedAnswer: null
+                            })
+                        }
+                    )
+                )
+            }
+        })()
     }, [])
     
     // Format data for rendering
-    useEffect(() => {
-        if (data) {
-            setQuestionData(data.results.map(
-                ({ question, correct_answer, incorrect_answers }, index) => {
-                    const correctAnswer = he.decode(correct_answer)
-                    const incorrectAnswers = incorrect_answers.map(answer => he.decode(answer))
-                    const answers = shuffle([correctAnswer, ...incorrectAnswers]).map(
-                        answer => ({
-                            id: answer,
-                            label: answer
-                        })
-                    )
-                    // console.log(incorrectAnswers)
 
-                    return (
-                        {
-                            questionId: index,
-                            question: he.decode(question),
-                            answers: answers,
-                            correctAnswer: correctAnswer,
-                            selectedAnswer: null
-                        }
-                    )
-                }
-            ))
-        }
-    }, [data])
+    // useEffect(() => {
+    //     if (data) {
+    //         setQuizData(data.results.map(
+    //             ({ question, correct_answer, incorrect_answers }, index) => {
+    //                 const correctAnswer = he.decode(correct_answer)
+    //                 const incorrectAnswers = incorrect_answers.map(answer => he.decode(answer))
+    //                 const answers = shuffle([correctAnswer, ...incorrectAnswers]).map(
+    //                     answer => ({
+    //                         id: answer,
+    //                         label: answer
+    //                     })
+    //                 )
 
-    // Keep score in sync with questionData
-    useEffect(() => {
-        setScore(
-            questionData.reduce(
-                (score, question) =>
-                    score + (question.selectedAnswer === question.correctAnswer)
-            , 0)
-        )
-    }, [questionData])
+    //                 return (
+    //                     {
+    //                         questionId: index,
+    //                         question: he.decode(question),
+    //                         answers: answers,
+    //                         correctAnswer: correctAnswer,
+    //                         selectedAnswer: null
+    //                     }
+    //                 )
+    //             }
+    //         ))
+    //     }
+    // }, [data])
+
+    // Keep score in sync with quizData
+
+    // useEffect(() => {
+    //     setScore(
+    //         quizData.reduce(
+    //             (score, question) =>
+    //                 score + (question.selectedAnswer === question.correctAnswer)
+    //         , 0)
+    //     )
+    // }, [quizData])
+
     
     const handlePlayAgain = () => {
         setIsGameOver(false)
         fetchMyAPI(apiUrl)
     }
+
     
-    console.log(data)
-    
+    let score
+    if (quizData) {
+        score = quizData.reduce(
+            (score, question) =>
+                score + (question.selectedAnswer === question.correctAnswer)
+        , 0)
+    }
+
     return (
         <main>
             <div>{
-                questionData.map(
-                    ({ questionId, question, answers, selectedAnswer}) => {
+                quizData.map(
+                    ({
+                        questionId,
+                        question,
+                        answers,
+                        correctAnswer,
+                        selectedAnswer
+                    }) => {
                         return (
-                            <ControlPane
+                            <QuestionPane
                                 key={question}
-                                title={question}
-                                options={answers}
-                                currentOption={selectedAnswer}
-                                
-                                disabled={isGameOver}
-                                handleSelectOption={answer => setQuestionData(
+                                question={question}
+                                answers={answers}
+                                currentAnswer={selectedAnswer}
+                                isGameOver={isGameOver}
+                                correctAnswer={correctAnswer}
+                                handleSelectAnswer={answer => setQuizData(
                                     prevQuestionData => prevQuestionData.map(
                                         question => question.questionId === questionId ?
                                             { ...question, selectedAnswer: answer }
@@ -100,7 +144,7 @@ function Quiz({ handleStartGame, apiUrl }) {
                     </QuizFooter>
                     :
                     <QuizFooter>
-                        <Score>You scored: {score}/{questionData.length} correct answers</Score>
+                        <Score>You scored: {score}/{quizData.length} correct answers</Score>
                         <ButtonWrapper>
                             <Button onClick={handlePlayAgain}>Play again</Button>
                             <Button onClick={() => handleStartGame(false)}>Menu</Button>

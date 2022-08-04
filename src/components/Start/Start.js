@@ -18,9 +18,10 @@ import Button from '../Button';
 
 function Start({ handleStartGame, setApiUrl }) {
     // Cache categories data in localStorage
-    const { fetchMyAPI, data: categories, error, loading } = useFetch()
+    // const { fetchMyAPI, data: categories, error, loading } = useFetch()
+    const { fetchMyAPI, error, loading } = useFetch()
     // const { data: categories, error, loading } = useFetch(categoryUrl)
-    const [categoryOptions, setCategoryOptions] = useState(null)
+    const [categories, setCategories] = useState([])
     const [category, setCategoryId] = useState("")
     const [amount, setAmount] = useState(amountOptions[0].id)
     const [difficulty, setDifficulty] = useState(difficultyOptions[0].id)
@@ -32,7 +33,19 @@ function Start({ handleStartGame, setApiUrl }) {
     // console.log(`current type: ${type}`)
     
     useEffect(() => {
-        fetchMyAPI(categoryUrl)
+        (async () => {
+            const data = await fetchMyAPI(categoryUrl)
+
+            if (!error) {
+                setCategories(
+                    [{ id: "", label: "Any Category"}].concat( // "Any" option
+                        data["trivia_categories"].map(
+                            ({ id, name }) => ({ id, label: name })
+                        )
+                    )
+                )
+            }
+        })()
     }, [])
 
     useEffect(() => {
@@ -54,18 +67,18 @@ function Start({ handleStartGame, setApiUrl }) {
         setApiUrl
     ])
 
-    useEffect(() => {
-        if (categories) {
-            setCategoryOptions(
-                [{ id: "", label: "Any Category"}].concat( // Add any option
-                    categories['trivia_categories'].map(({ id, name }) => ({
-                        id,
-                        label: name
-                    }))
-                )
-            )
-        }
-    }, [categories])
+    // useEffect(() => {
+    //     if (categories) {
+    //         setCategoryOptions(
+    //             [{ id: "", label: "Any Category"}].concat(
+    //                 categories['trivia_categories'].map(({ id, name }) => ({
+    //                     id,
+    //                     label: name
+    //                 }))
+    //             )
+    //         )
+    //     }
+    // }, [categories])
 
     return (
         <Wrapper>
@@ -76,7 +89,7 @@ function Start({ handleStartGame, setApiUrl }) {
             <div>
                 <ControlPane
                     title="Category"
-                    options={categoryOptions ?? []}
+                    options={categories}
                     currentOption={category}
                     handleSelectOption={setCategoryId}
                 />
@@ -133,4 +146,5 @@ const StartButton = styled(Button)`
     margin-right: auto;
     padding: 1em 2.5em;
 `
+
 export default Start;
