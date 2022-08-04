@@ -29,6 +29,7 @@ export const COLOURS = {
     buttonDisabled: 'hsl(233, 17%, 63%)',
     correct: 'hsl(133, 46%, 71%)',
     incorrect: 'hsl(360, 81%, 85%)',
+    lemon: 'hsl(54, 100%, 91%)'
 };
 
 // Font weights

@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import he from 'he';
+import Confetti from 'react-confetti';
 
+import { COLOURS } from '../../constants';
 import { shuffle } from '../../utils';
 import useFetch from '../../hooks/useFetch';
+import useWindowScrollSize from '../../hooks/useWindowScrollSize';
 import QuestionPane from '../QuestionPane';
 import Button from '../Button';
 
@@ -12,6 +15,7 @@ function Quiz({ handleStartGame, apiUrl }) {
     const [isGameOver, setIsGameOver] = useState(false)
     const { fetchMyAPI, data, error, loading } = useFetch()
     const [quizData, setQuizData] = useState([])
+    const windowScrollSize = useWindowScrollSize()
 
     useEffect(() => {
         fetchMyAPI(apiUrl)
@@ -57,9 +61,22 @@ function Quiz({ handleStartGame, apiUrl }) {
                 score + (question.selectedAnswer === question.correctAnswer)
         , 0)
     }
+    console.log(quizData)
 
     return (
         <main>
+            {/* Show confetti if the player gets 100%! */}
+            {(isGameOver && (score === quizData.length)) &&
+                <Confetti
+                    width={windowScrollSize.width}
+                    height={windowScrollSize.height}
+                    colors={[
+                        COLOURS.button,
+                        COLOURS.buttonHighlight,
+                        COLOURS.lemon
+                    ]}
+                />
+            }
             <div>
                 {!loading && quizData.map(
                     ({
