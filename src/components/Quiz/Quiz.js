@@ -8,6 +8,8 @@ import { COLOURS } from '../../constants';
 import { shuffle } from '../../utils';
 import useFetch from '../../hooks/useFetch';
 import useWindowScrollSize from '../../hooks/useWindowScrollSize';
+
+import Loader from '../Loader';
 import QuestionPane from '../QuestionPane';
 import Button from '../Button';
 
@@ -61,10 +63,9 @@ function Quiz({ handleStartGame, apiUrl }) {
                 score + (question.selectedAnswer === question.correctAnswer)
         , 0)
     }
-    console.log(quizData)
 
     return (
-        <main>
+        <Wrapper>
             {/* Show confetti if the player gets 100%! */}
             {(isGameOver && (score === quizData.length)) &&
                 <Confetti
@@ -77,6 +78,10 @@ function Quiz({ handleStartGame, apiUrl }) {
                     ]}
                 />
             }
+
+            {/* Show a loader if the data is still loading */}
+            {loading && <Loader loading={loading}/>}
+
             <div>
                 {!loading && quizData.map(
                     ({
@@ -127,9 +132,13 @@ function Quiz({ handleStartGame, apiUrl }) {
                 </QuizFooter>
             )
             }
-        </main>
+        </Wrapper>
     )
 }
+
+const Wrapper = styled.div`
+    min-height: 95vh;
+`
 
 const QuizFooter = styled.div`
     display: flex;

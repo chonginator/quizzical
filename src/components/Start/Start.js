@@ -15,6 +15,7 @@ import {
 import useFetch from '../../hooks/useFetch';
 import ControlPane from '../ControlPane';
 import Button from '../Button';
+import Loader from '../Loader';
 
 function Start({ handleStartGame, setApiUrl }) {
     const { fetchMyAPI, data, error, loading } = useFetch()
@@ -76,40 +77,44 @@ function Start({ handleStartGame, setApiUrl }) {
 
             <Subtitle>Let's get quizzical</Subtitle>
 
-            <div>
-                <ControlPane
-                    title="Category"
-                    options={categories}
-                    currentOption={category}
-                    handleSelectOption={setCategoryId}
-                />
+            {/* Show a loader if the categories data is still loading */}
+            {loading && <Loader loading={loading}/>}
 
-                <ControlPane
-                    title="Number of Questions"
-                    options={amountOptions}
-                    currentOption={amount}
-                    handleSelectOption={setAmount}
-                />
+            {!loading &&
+                <div>
+                    <ControlPane
+                        title="Category"
+                        options={categories}
+                        currentOption={category}
+                        handleSelectOption={setCategoryId}
+                    />
 
-                <ControlPane
-                    title="Difficulty"
-                    options={difficultyOptions}
-                    currentOption={difficulty}
-                    handleSelectOption={setDifficulty}
-                />
+                    <ControlPane
+                        title="Number of Questions"
+                        options={amountOptions}
+                        currentOption={amount}
+                        handleSelectOption={setAmount}
+                    />
 
-                <ControlPane
-                    title="Question Type"
-                    options={typeOptions}
-                    currentOption={type}
-                    handleSelectOption={setType}
-                />
+                    <ControlPane
+                        title="Difficulty"
+                        options={difficultyOptions}
+                        currentOption={difficulty}
+                        handleSelectOption={setDifficulty}
+                    />
 
-            </div>
+                    <ControlPane
+                        title="Question Type"
+                        options={typeOptions}
+                        currentOption={type}
+                        handleSelectOption={setType}
+                    />
 
-            <StartButton onClick={() => handleStartGame(true)}>
-                Start quiz
-            </StartButton>
+                    <StartButton onClick={() => handleStartGame(true)}>
+                        Start quiz
+                    </StartButton>
+                </div>
+            }
         </Wrapper>
     )
 }
@@ -117,6 +122,7 @@ function Start({ handleStartGame, setApiUrl }) {
 const Wrapper = styled.main`
     display: flex;
     flex-direction: column;
+    min-height: 80vh;
 `
 
 const Title = styled.h1`
@@ -131,6 +137,7 @@ const Subtitle = styled.p`
 `
 
 const StartButton = styled(Button)`
+    display: block;
     margin-top: 1em;
     margin-left: auto;
     margin-right: auto;
