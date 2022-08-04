@@ -30,7 +30,10 @@ const AnswerToggle = ({
 
 const CorrectToggle = styled(ToggleButtonWrapper)`
     background-color: var(--colour-correct);
-    color: var(--colour-text);
+    
+    :disabled {
+        color: var(--colour-text);
+    }
 `
 
 const IncorrectToggle = styled(ToggleButtonWrapper)`
