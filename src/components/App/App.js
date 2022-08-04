@@ -12,8 +12,6 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [apiUrl, setApiUrl] = useState("")
 
-  // console.log(apiUrl)
-
   return (
     <Wrapper>
       <MaxWidthWrapper>

@@ -17,35 +17,17 @@ import ControlPane from '../ControlPane';
 import Button from '../Button';
 
 function Start({ handleStartGame, setApiUrl }) {
-    // Cache categories data in localStorage
-    // const { fetchMyAPI, data: categories, error, loading } = useFetch()
-    const { fetchMyAPI, error, loading } = useFetch()
-    // const { data: categories, error, loading } = useFetch(categoryUrl)
+    const { fetchMyAPI, data, error, loading } = useFetch()
     const [categories, setCategories] = useState([])
     const [category, setCategoryId] = useState("")
     const [amount, setAmount] = useState(amountOptions[0].id)
     const [difficulty, setDifficulty] = useState(difficultyOptions[0].id)
     const [type, setType] = useState(typeOptions[0].id)
 
-    // console.log(`current category: ${category}`)
-    // console.log(`current amount: ${amount}`)
-    // console.log(`current difficulty: ${difficulty}`)
-    // console.log(`current type: ${type}`)
-    
     useEffect(() => {
-        (async () => {
-            const data = await fetchMyAPI(categoryUrl)
-
-            if (!error) {
-                setCategories(
-                    [{ id: "", label: "Any Category"}].concat( // "Any" option
-                        data["trivia_categories"].map(
-                            ({ id, name }) => ({ id, label: name })
-                        )
-                    )
-                )
-            }
-        })()
+        if (!localStorage.getItem('trivia_categories')) {
+            fetchMyAPI(categoryUrl)
+        }
     }, [])
 
     useEffect(() => {
@@ -67,18 +49,26 @@ function Start({ handleStartGame, setApiUrl }) {
         setApiUrl
     ])
 
-    // useEffect(() => {
-    //     if (categories) {
-    //         setCategoryOptions(
-    //             [{ id: "", label: "Any Category"}].concat(
-    //                 categories['trivia_categories'].map(({ id, name }) => ({
-    //                     id,
-    //                     label: name
-    //                 }))
-    //             )
-    //         )
-    //     }
-    // }, [categories])
+    useEffect(() => {
+        // Get categories state from localStorage, if any
+        const categories = localStorage.getItem('trivia_categories')
+
+        if (categories) {
+            setCategories(JSON.parse(categories))
+        } else {
+            if (data) {
+                const categories = 
+                    [{ id: "", label: "Any Category"}].concat(
+                        data['trivia_categories'].map(({ id, name }) => ({
+                            id,
+                            label: name
+                        }))
+                    )
+                setCategories(categories)
+                localStorage.setItem('trivia_categories', JSON.stringify(categories))
+            }
+        }
+    }, [data])
 
     return (
         <Wrapper>
