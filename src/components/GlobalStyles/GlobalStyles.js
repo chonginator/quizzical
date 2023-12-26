@@ -1,8 +1,8 @@
 import { createGlobalStyle } from 'styled-components';
 import {
-    FAMILIES,
+    FONT_FAMILIES,
     COLOURS,
-    WEIGHTS,
+    FONT_WEIGHTS,
     QUERIES
 } from '../../constants';
 
@@ -75,13 +75,13 @@ const GlobalStyles = createGlobalStyle`
         Design tokens
     */
     html {
-        --font-family-primary: ${FAMILIES.primary};
-        --font-family-secondary: ${FAMILIES.secondary};
+        --font-family-primary: ${FONT_FAMILIES.primary};
+        --font-family-secondary: ${FONT_FAMILIES.secondary};
 
-        --font-weight-regular: ${WEIGHTS.regular};
-        --font-weight-medium: ${WEIGHTS.medium};
-        --font-weight-semiBold: ${WEIGHTS.semiBold};
-        --font-weight-bold: ${WEIGHTS.bold};
+        --font-weight-regular: ${FONT_WEIGHTS.regular};
+        --font-weight-medium: ${FONT_WEIGHTS.medium};
+        --font-weight-semiBold: ${FONT_WEIGHTS.semiBold};
+        --font-weight-bold: ${FONT_WEIGHTS.bold};
 
         --colour-background: ${COLOURS.background};
         --colour-text: ${COLOURS.text};

@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import {
-    baseUrl,
-    categoryUrl,
+    TRIVIA_API_URL,
+    TRIVIA_CATEGORIES_URL,
 } from '../../constants';
 
 import {
-    amountOptions,
-    difficultyOptions,
-    typeOptions
+    numberOfQuestionsOptions,
+    questionDifficultyOptions,
+    questionTypeOptions
 } from './Start.helpers';
 
 import useFetch from '../../hooks/useFetch';
@@ -21,19 +21,22 @@ function Start({ handleStartGame, setApiUrl }) {
     const { fetchMyAPI, data, error, loading } = useFetch()
     const [categories, setCategories] = useState([])
     const [category, setCategoryId] = useState("")
-    const [amount, setAmount] = useState(amountOptions[0].id)
-    const [difficulty, setDifficulty] = useState(difficultyOptions[0].id)
-    const [type, setType] = useState(typeOptions[0].id)
+    const [amount, setAmount] = useState(numberOfQuestionsOptions[0].id)
+    const [difficulty, setDifficulty] = useState(questionDifficultyOptions[0].id)
+    const [type, setType] = useState(questionTypeOptions[0].id)
+
+    console.log({ data })
+    console.log({ categories })
 
     useEffect(() => {
         if (!localStorage.getItem('trivia_categories')) {
-            fetchMyAPI(categoryUrl)
+            fetchMyAPI(TRIVIA_CATEGORIES_URL)
         }
     }, [])
 
     useEffect(() => {
         setApiUrl(
-            baseUrl +
+            TRIVIA_API_URL +
             new URLSearchParams({
                 category,
                 amount,
@@ -91,21 +94,21 @@ function Start({ handleStartGame, setApiUrl }) {
 
                     <ControlPane
                         title="Number of Questions"
-                        options={amountOptions}
+                        options={numberOfQuestionsOptions}
                         currentOption={amount}
                         handleSelectOption={setAmount}
                     />
 
                     <ControlPane
                         title="Difficulty"
-                        options={difficultyOptions}
+                        options={questionDifficultyOptions}
                         currentOption={difficulty}
                         handleSelectOption={setDifficulty}
                     />
 
                     <ControlPane
                         title="Question Type"
-                        options={typeOptions}
+                        options={questionTypeOptions}
                         currentOption={type}
                         handleSelectOption={setType}
                     />
