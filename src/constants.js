@@ -8,6 +8,8 @@ export const QUESTION_DIFFICULTY_OPTIONS = ['easy', 'medium', 'hard'];
 
 export const QUESTION_TYPE_OPTIONS = ['multiple', 'boolean'];
 
+export const ANY_CATEGORY = { id: '', name: 'Any Category' };
+
 // Font FONT_FAMILIES
 export const FONT_FAMILIES = {
     primary: '"Karla", sans-serif',

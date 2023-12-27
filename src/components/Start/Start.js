@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import useSWR from 'swr';
 import styled from 'styled-components';
 
 import {
     TRIVIA_API_URL,
     TRIVIA_CATEGORIES_URL,
+    ANY_CATEGORY
 } from '../../constants';
 
 import {
@@ -18,21 +20,25 @@ import Button from '../Button';
 import Loader from '../Loader';
 
 function Start({ handleStartGame, setApiUrl }) {
-    const { fetchMyAPI, data, error, loading } = useFetch()
-    const [categories, setCategories] = useState([])
     const [category, setCategoryId] = useState("")
     const [amount, setAmount] = useState(numberOfQuestionsOptions[0].id)
     const [difficulty, setDifficulty] = useState(questionDifficultyOptions[0].id)
     const [type, setType] = useState(questionTypeOptions[0].id)
+    
+    const { data, error, isLoading } = useSWR(TRIVIA_CATEGORIES_URL, fetcher)
 
-    console.log({ data })
-    console.log({ categories })
+    async function fetcher(url) {
+        const res = await fetch(url)
+        const data = await res.json()
 
-    useEffect(() => {
-        if (!localStorage.getItem('trivia_categories')) {
-            fetchMyAPI(TRIVIA_CATEGORIES_URL)
+        if (!data) {
+            throw new Error(`Unexpected data: ${data}.`);
         }
-    }, [])
+
+        return data;
+    }
+
+    const triviaCategories = data ? [ANY_CATEGORY, ...data.trivia_categories] : [];
 
     useEffect(() => {
         setApiUrl(
@@ -53,41 +59,19 @@ function Start({ handleStartGame, setApiUrl }) {
         setApiUrl
     ])
 
-    useEffect(() => {
-        // Get categories state from localStorage, if any
-        const categories = localStorage.getItem('trivia_categories')
-
-        if (categories) {
-            setCategories(JSON.parse(categories))
-        } else {
-            if (data) {
-                const categories = 
-                    [{ id: "", label: "Any Category"}].concat(
-                        data['trivia_categories'].map(({ id, name }) => ({
-                            id,
-                            label: name
-                        }))
-                    )
-                setCategories(categories)
-                localStorage.setItem('trivia_categories', JSON.stringify(categories))
-            }
-        }
-    }, [data])
-
     return (
         <Wrapper>
             <Title>Quizzical</Title>
 
             <Subtitle>Let's get quizzical</Subtitle>
 
-            {/* Show a loader if the categories data is still loading */}
-            {loading && <Loader loading={loading}/>}
+            {isLoading && <Loader loading={isLoading}/>}
 
-            {!loading &&
-                <div>
+            {!isLoading &&
+                <>
                     <ControlPane
                         title="Category"
-                        options={categories}
+                        options={triviaCategories}
                         currentOption={category}
                         handleSelectOption={setCategoryId}
                     />
@@ -116,7 +100,7 @@ function Start({ handleStartGame, setApiUrl }) {
                     <StartButton onClick={() => handleStartGame(true)}>
                         Start quiz
                     </StartButton>
-                </div>
+                </>
             }
         </Wrapper>
     )

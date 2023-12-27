@@ -16,7 +16,7 @@ function ControlPane({
         <PaneWrapper>
             <PaneTitle>{title}</PaneTitle>
             <ButtonRow>
-                {options.map(({ id: optionId, label }) => {
+                {options.map(({ id: optionId, label, name }) => {
                     return (
                         <ToggleButton 
                             key={optionId}
@@ -24,7 +24,7 @@ function ControlPane({
                             disabled={disabled}
                             onClick={() => handleSelectOption(optionId)}
                         >
-                            {label}
+                            {label || name}
                         </ToggleButton>
                     )
                 })}
