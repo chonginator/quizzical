@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import useSWR from 'swr';
+import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 
 import {
     TRIVIA_API_URL,
-    TRIVIA_CATEGORIES_URL,
-    ANY_CATEGORY
 } from '../../constants';
 
 import {
@@ -14,32 +11,19 @@ import {
     questionTypeOptions
 } from './Start.helpers';
 
-import useFetch from '../../hooks/useFetch';
+import { TriviaCategoriesContext } from '../TriviaCategoriesProvider';
 import ControlPane from '../ControlPane';
 import Button from '../Button';
 import Loader from '../Loader';
 
 function Start({ handleStartGame, setApiUrl }) {
-    const [category, setCategoryId] = useState("")
-    const [amount, setAmount] = useState(numberOfQuestionsOptions[0].id)
-    const [difficulty, setDifficulty] = useState(questionDifficultyOptions[0].id)
-    const [type, setType] = useState(questionTypeOptions[0].id)
+    const [category, setCategoryId] = useState("");
+    const [amount, setAmount] = useState(numberOfQuestionsOptions[0].id);
+    const [difficulty, setDifficulty] = useState(questionDifficultyOptions[0].id);
+    const [type, setType] = useState(questionTypeOptions[0].id);
     
-    const { data, error, isLoading } = useSWR(TRIVIA_CATEGORIES_URL, fetcher)
-
-    async function fetcher(url) {
-        const res = await fetch(url)
-        const data = await res.json()
-
-        if (!data) {
-            throw new Error(`Unexpected data: ${data}.`);
-        }
-
-        return data;
-    }
-
-    const triviaCategories = data ? [ANY_CATEGORY, ...data.trivia_categories] : [];
-
+    const { triviaCategories, error, isLoading } = useContext(TriviaCategoriesContext);
+    
     useEffect(() => {
         setApiUrl(
             TRIVIA_API_URL +

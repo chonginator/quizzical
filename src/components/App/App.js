@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
+import TriviaCategoriesProvider from '../TriviaCategoriesProvider';
 import Start from '../Start';
 import Quiz from '../Quiz';
 import GlobalStyles from '../GlobalStyles/GlobalStyles';
@@ -13,23 +14,25 @@ function App() {
   const [apiUrl, setApiUrl] = useState("")
 
   return (
-    <Wrapper>
-      <MaxWidthWrapper>
-        {isPlaying ?
-          <Quiz
-            handleStartGame={setIsPlaying}
-            apiUrl={apiUrl}
-          />
-          :
-          <Start
-            handleStartGame={setIsPlaying}
-            setApiUrl={setApiUrl}
-          />
-        }
+    <TriviaCategoriesProvider>
+      <Wrapper>
+        <MaxWidthWrapper>
+          {isPlaying ?
+            <Quiz
+              handleStartGame={setIsPlaying}
+              apiUrl={apiUrl}
+            />
+            :
+            <Start
+              handleStartGame={setIsPlaying}
+              setApiUrl={setApiUrl}
+            />
+          }
 
-        <GlobalStyles />
-      </MaxWidthWrapper>
-    </Wrapper>
+          <GlobalStyles />
+        </MaxWidthWrapper>
+      </Wrapper>
+    </TriviaCategoriesProvider>
   );
 }
 
