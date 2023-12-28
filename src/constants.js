@@ -1,5 +1,5 @@
 export const TRIVIA_CATEGORIES_URL = 'https://opentdb.com/api_category.php';
-export const TRIVIA_API_URL = 'https://opentdb.com/api.php?';
+export const TRIVIA_API_BASE_URL = 'https://opentdb.com/api.php?';
 
 export const NUMBER_OF_QUESTIONS_OPTIONS = [10, 20, 30, 40, 50];
 export const QUESTION_DIFFICULTY_OPTIONS = ['easy', 'medium', 'hard'];
@@ -8,6 +8,11 @@ export const QUESTION_TYPE_OPTIONS = ['multiple', 'boolean'];
 export const ANY_CATEGORY = { id: '', name: 'Any Category' };
 export const ANY_DIFFICULTY = { id: '', name: 'Any Difficulty' };
 export const ANY_QUESTION_TYPE = { id: '', name: 'Any Type' };
+
+export const DEFAULT_NUMBER_OF_CATEGORIES = 24;
+export const DEFAULT_NUMBER_OF_QUESTIONS = 5;
+export const DEFAULT_NUMBER_OF_DIFFICULTIES = 4;
+export const DEFAULT_NUMBER_OF_QUESTION_TYPES = 3;
 
 // Font FONT_FAMILIES
 export const FONT_FAMILIES = {
@@ -23,6 +28,7 @@ export const COLOURS = {
     button: 'hsl(230, 34%, 46%)',
     buttonHighlight: 'hsl(230, 61%, 90%)',
     buttonDisabled: 'hsl(233, 17%, 63%)',
+    buttonLoading: 'hsl(225, 47%, 93%)',
     correct: 'hsl(133, 46%, 71%)',
     incorrect: 'hsl(360, 81%, 85%)',
     lemon: 'hsl(54, 100%, 91%)'

@@ -89,6 +89,7 @@ const GlobalStyles = createGlobalStyle`
         --colour-button: ${COLOURS.button};
         --colour-button-highlight: ${COLOURS.buttonHighlight};
         --colour-button-disabled: ${COLOURS.buttonDisabled};
+        --colour-button-loading: ${COLOURS.buttonLoading};
         --colour-correct: ${COLOURS.correct};
         --colour-incorrect: ${COLOURS.incorrect};
 

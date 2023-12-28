@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 
 import he from 'he';
@@ -9,19 +9,22 @@ import { shuffle } from '../../utils';
 import useFetch from '../../hooks/useFetch';
 import useWindowScrollSize from '../../hooks/useWindowScrollSize';
 
+import { TriviaAPIContext } from '../TriviaAPIProvider';
 import Loader from '../Loader';
 import QuestionPane from '../QuestionPane';
 import Button from '../Button';
 
-function Quiz({ handleStartGame, apiUrl }) {
+function Quiz({ setIsPlaying }) {
     const [isGameOver, setIsGameOver] = useState(false)
     const { fetchMyAPI, data, error, loading } = useFetch()
     const [quizData, setQuizData] = useState([])
     const windowScrollSize = useWindowScrollSize()
 
+    const { triviaAPIEndpoint } = useContext(TriviaAPIContext);
+
     useEffect(() => {
-        fetchMyAPI(apiUrl)
-    }, [apiUrl])
+        fetchMyAPI(triviaAPIEndpoint)
+    }, [triviaAPIEndpoint])
     
     // Format data for rendering
     useEffect(() => {
@@ -53,7 +56,7 @@ function Quiz({ handleStartGame, apiUrl }) {
 
     const handlePlayAgain = () => {
         setIsGameOver(false)
-        fetchMyAPI(apiUrl)
+        fetchMyAPI(triviaAPIEndpoint)
     }
     
     let score
@@ -125,7 +128,7 @@ function Quiz({ handleStartGame, apiUrl }) {
                     </Score>
                     <ButtonWrapper>
                         <Button onClick={handlePlayAgain}>Play again</Button>
-                        <Button onClick={() => handleStartGame(false)}>
+                        <Button onClick={() => setIsPlaying(false)}>
                             Menu
                         </Button>
                     </ButtonWrapper>

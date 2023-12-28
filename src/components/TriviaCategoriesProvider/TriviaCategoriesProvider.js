@@ -9,7 +9,7 @@ import {
 export const TriviaCategoriesContext = createContext();
 
 function TriviaCategoriesProvider({ children }) {
-    const { data, error, isLoading } = useSWR(TRIVIA_CATEGORIES_URL, fetcher)
+    const { data, error: triviaCategoriesError, isLoading: triviaCategoriesAreLoading } = useSWR(TRIVIA_CATEGORIES_URL, fetcher)
 
   async function fetcher(url) {
     const res = await fetch(url)
@@ -25,7 +25,7 @@ function TriviaCategoriesProvider({ children }) {
   const triviaCategories = data ? [ANY_CATEGORY, ...data.trivia_categories] : [];
 
   return (
-    <TriviaCategoriesContext.Provider value={{ triviaCategories, error, isLoading }}>
+    <TriviaCategoriesContext.Provider value={{ triviaCategories, triviaCategoriesError, triviaCategoriesAreLoading }}>
       {children}
     </TriviaCategoriesContext.Provider>
   );

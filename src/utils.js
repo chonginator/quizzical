@@ -16,3 +16,9 @@ export const shuffle = array => {
 
     return array;
 }
+
+/**
+ * Generate a random number between min (inclusive) and max (inclusive).
+ */
+export const getRandomNumBetweenMinAndMax = (min, max) =>
+    Math.floor(Math.random() * (max - min + 1)) + min;
