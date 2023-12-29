@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext, memo } from 'react';
 import {
     TRIVIA_API_BASE_URL,
     DEFAULT_NUMBER_OF_CATEGORIES,
-    DEFAULT_NUMBER_OF_QUESTIONS,
+    DEFAULT_NUMBER_OF_QUESTION_AMOUNTS,
     DEFAULT_NUMBER_OF_DIFFICULTIES,
     DEFAULT_NUMBER_OF_QUESTION_TYPES
 } from '../../constants';
@@ -16,9 +16,7 @@ import {
 
 import { TriviaAPIEndpointContext } from '../TriviaAPIEndpointProvider';
 import { TriviaCategoriesContext } from '../TriviaCategoriesProvider';
-import ToggleGroup from '../ToggleGroup';
-import ToggleButton from '../ToggleButton';
-import LoadingToggleButton from '../LoadingToggleButton';
+import ToggleGroup, { ToggleGroupRow, ToggleGroupTitle, ToggleGroupItem, ToggleGroupLoadingItem } from '../ToggleGroup';
 
 function StartMenuControls() {
   const [categoryId, setCategoryId] = useState("");
@@ -52,90 +50,118 @@ function StartMenuControls() {
 
   return (
     triviaCategoriesAreLoading ?
-      <>
-        <ToggleGroup title="Category">
-          {new Array(DEFAULT_NUMBER_OF_CATEGORIES).fill().map((_, index) => (
-              <LoadingToggleButton key={index} style={{ 'minWidth': `${getRandomNumBetweenMinAndMax(40, 250)}px` }} />
-          ))}
-        </ToggleGroup>
-
-        <ToggleGroup title="Number of Questions">
-          {new Array(DEFAULT_NUMBER_OF_QUESTIONS).fill().map((_, index) => (
-              <LoadingToggleButton key={index} style={{ 'minWidth': '40px'}} />
-          ))}
-        </ToggleGroup>
-
-        <ToggleGroup title="Difficulty">
-            {new Array(DEFAULT_NUMBER_OF_DIFFICULTIES).fill().map((_, index) => (
-                <LoadingToggleButton key={index} />
-            ))}
-        </ToggleGroup>
-
-        <ToggleGroup title="Question Type">
-          {new Array(DEFAULT_NUMBER_OF_QUESTION_TYPES).fill().map((_, index) => (
-              <LoadingToggleButton key={index} />
-          ))}
-        </ToggleGroup>
-      </>
+      <StartMenuControlsSkeleton />
     :
-      <>
-        <ToggleGroup
-          title="Category"
-        >
-          {triviaCategories.map(({ id, name }) => (
-            <ToggleButton
-                key={id}
-                isSelected={categoryId === id}
-                onClick={() => setCategoryId(id)}
-            >
-                {name}
-            </ToggleButton>
-          ))}
-        </ToggleGroup>
-
-        <ToggleGroup title="Number of Questions">
-          {numberOfQuestionsOptions.map(({ id, name }) => (
-              <ToggleButton
-                  key={id}
-                  isSelected={numberOfQuestions === id}
-                  onClick={() => setNumberOfQuestions(id)}
-              >
-                  {name}
-              </ToggleButton>
-          ))}
-        </ToggleGroup>
-
-        <ToggleGroup
-            title="Difficulty"
-        >
-            {questionDifficultyOptions.map(({ id, name }) => (
-                <ToggleButton
-                    key={id}
-                    isSelected={questionDifficulty === id}
-                    onClick={() => setQuestionDifficulty(id)}
-                >
-                    {name}
-                </ToggleButton>
-            ))}
-        </ToggleGroup>
-
-        <ToggleGroup
-            title="Question Type"
-        >
-            {questionTypeOptions.map(({ id, name }) => (
-                <ToggleButton
-                    key={id}
-                    isSelected={questionType === id}
-                    onClick={() => setQuestionType(id)}
-                >
-                    {name}
-                </ToggleButton>
-            ))}
-
-        </ToggleGroup>
-      </>
+      <StartMenuControlsLoaded />
   )
   
+  function StartMenuControlsSkeleton() {
+    return (
+        <>
+            <ToggleGroup>
+                <ToggleGroupTitle>Category</ToggleGroupTitle>
+                <ToggleGroupRow>
+                    {new Array(DEFAULT_NUMBER_OF_CATEGORIES).fill().map((_, index) => (
+                    <ToggleGroupLoadingItem key={index} style={{ 'minWidth': `${getRandomNumBetweenMinAndMax(40, 250)}px` }} />
+                    ))}
+                </ToggleGroupRow>
+            </ToggleGroup>
+
+            <ToggleGroup>
+                <ToggleGroupTitle>Number of Questions</ToggleGroupTitle>
+                <ToggleGroupRow>
+                    {new Array(DEFAULT_NUMBER_OF_QUESTION_AMOUNTS).fill().map((_, index) => (
+                    <ToggleGroupLoadingItem key={index} style={{ 'minWidth': '40px'}} />
+                    ))}
+                </ToggleGroupRow>
+            </ToggleGroup>
+
+            <ToggleGroup>
+                <ToggleGroupTitle>Difficulty</ToggleGroupTitle>
+                <ToggleGroupRow>
+                    {new Array(DEFAULT_NUMBER_OF_DIFFICULTIES).fill().map((_, index) => (
+                        <ToggleGroupLoadingItem key={index} />
+                    ))}
+                </ToggleGroupRow>
+            </ToggleGroup>
+
+            <ToggleGroup>
+                <ToggleGroupTitle>Question Type</ToggleGroupTitle>
+                <ToggleGroupRow>
+                    {new Array(DEFAULT_NUMBER_OF_QUESTION_TYPES).fill().map((_, index) => (
+                        <ToggleGroupLoadingItem key={index} />
+                    ))}
+                </ToggleGroupRow>
+            </ToggleGroup>
+        </>
+    )
+  }
+
+  function StartMenuControlsLoaded() {
+    return (
+        <>
+            <ToggleGroup>
+                <ToggleGroupTitle>Category</ToggleGroupTitle>
+                <ToggleGroupRow>
+                    {triviaCategories.map(({ id, name }) => (
+                        <ToggleGroupItem
+                            key={id}
+                            isSelected={categoryId === id}
+                            onClick={() => setCategoryId(id)}
+                        >
+                            {name}
+                        </ToggleGroupItem>
+                    ))}
+                </ToggleGroupRow>
+            </ToggleGroup>
+
+            <ToggleGroup>
+                <ToggleGroupTitle>Number of Questions</ToggleGroupTitle>
+                <ToggleGroupRow>
+                    {numberOfQuestionsOptions.map(({ id, name }) => (
+                        <ToggleGroupItem
+                            key={id}
+                            isSelected={numberOfQuestions === id}
+                            onClick={() => setNumberOfQuestions(id)}
+                        >
+                            {name}
+                        </ToggleGroupItem>
+                    ))}
+                </ToggleGroupRow>
+            </ToggleGroup>
+
+            <ToggleGroup>
+                <ToggleGroupTitle>Difficulty</ToggleGroupTitle>
+                <ToggleGroupRow>
+                    {questionDifficultyOptions.map(({ id, name }) => (
+                        <ToggleGroupItem
+                            key={id}
+                            isSelected={questionDifficulty === id}
+                            onClick={() => setQuestionDifficulty(id)}
+                        >
+                            {name}
+                        </ToggleGroupItem>
+                    ))}
+                </ToggleGroupRow>
+            </ToggleGroup>
+
+            <ToggleGroup>
+                <ToggleGroupTitle>Question Type</ToggleGroupTitle>
+                <ToggleGroupRow>
+                    {questionTypeOptions.map(({ id, name }) => (
+                        <ToggleGroupItem
+                            key={id}
+                            isSelected={questionType === id}
+                            onClick={() => setQuestionType(id)}
+                        >
+                            {name}
+                        </ToggleGroupItem>
+                    ))}
+                </ToggleGroupRow>
+            </ToggleGroup>
+        </>
+    )
+  }
 }
 
 export default memo(StartMenuControls);

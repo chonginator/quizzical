@@ -14,7 +14,7 @@ function TriviaQuestionsProvider({ children }) {
   const [questionsStatus, setQuestionsStatus] = useState('idle');
 
   const fetchAndSetQuestions = useCallback(async () => {
-    const data = await fetchTriviaQuestions(triviaAPIEndpoint);
+    const data = await fetchQuestions(triviaAPIEndpoint);
     setQuestions(data.results);
   }, [triviaAPIEndpoint]);
 
@@ -23,7 +23,7 @@ function TriviaQuestionsProvider({ children }) {
   }, [fetchAndSetQuestions])
   
 
-  const fetchTriviaQuestions = async endpoint => {
+  const fetchQuestions = async endpoint => {
     setQuestionsStatus('loading');
     const res = await fetch(endpoint);
     const data = await res.json();
@@ -38,7 +38,7 @@ function TriviaQuestionsProvider({ children }) {
 
   console.log('TriviaQuestionsProvider render!');
     
-  function formatTriviaQuestions(questions) {
+  function formatQuestions(questions) {
     return questions.map(
       ({ question, correct_answer, incorrect_answers }, index) => {
           const correctAnswer = he.decode(correct_answer)
@@ -59,7 +59,7 @@ function TriviaQuestionsProvider({ children }) {
 
   const value = useMemo(() => (
     {
-      questions: formatTriviaQuestions(questions),
+      questions: formatQuestions(questions),
       questionsAreLoading: questionsStatus === 'loading',
       fetchAndSetQuestions
     }

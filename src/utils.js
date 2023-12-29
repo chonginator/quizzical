@@ -22,3 +22,8 @@ export const shuffle = array => {
  */
 export const getRandomNumBetweenMinAndMax = (min, max) =>
     Math.floor(Math.random() * (max - min + 1)) + min;
+
+/**
+ * Scroll to the top of the window.
+ */
+export const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });

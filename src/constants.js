@@ -10,9 +10,12 @@ export const ANY_DIFFICULTY = { id: '', name: 'Any Difficulty' };
 export const ANY_QUESTION_TYPE = { id: '', name: 'Any Type' };
 
 export const DEFAULT_NUMBER_OF_CATEGORIES = 24;
-export const DEFAULT_NUMBER_OF_QUESTIONS = 5;
+export const DEFAULT_NUMBER_OF_QUESTION_AMOUNTS = 5;
 export const DEFAULT_NUMBER_OF_DIFFICULTIES = 4;
 export const DEFAULT_NUMBER_OF_QUESTION_TYPES = 3;
+
+export const DEFAULT_NUMBER_OF_QUESTIONS = NUMBER_OF_QUESTIONS_OPTIONS[0];
+export const DEFAULT_NUMBER_OF_ANSWERS = 4;
 
 // Font FONT_FAMILIES
 export const FONT_FAMILIES = {

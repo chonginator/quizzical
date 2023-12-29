@@ -9,6 +9,10 @@ const Button = styled.button`
     border-radius: 0.9375em;
     padding: 0.5625em 1.125em;
     cursor: pointer;
+
+    :disabled {
+        background-color: var(--colour-button-disabled);
+    }
 `
 
 export default Button;
