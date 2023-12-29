@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, memo } from 'react';
 
 import {
     TRIVIA_API_BASE_URL,
@@ -14,7 +14,7 @@ import {
     questionTypeOptions
 } from './StartMenu.helpers';
 
-import { TriviaAPIContext } from '../TriviaAPIProvider';
+import { TriviaAPIEndpointContext } from '../TriviaAPIEndpointProvider';
 import { TriviaCategoriesContext } from '../TriviaCategoriesProvider';
 import ToggleGroup from '../ToggleGroup';
 import ToggleButton from '../ToggleButton';
@@ -26,17 +26,19 @@ function StartMenuControls() {
   const [questionDifficulty, setQuestionDifficulty] = useState(questionDifficultyOptions[0].id);
   const [questionType, setQuestionType] = useState(questionTypeOptions[0].id);
 
-  const { setTriviaAPIEndpoint } = useContext(TriviaAPIContext);
+  const { setTriviaAPIEndpoint } = useContext(TriviaAPIEndpointContext);
   const { triviaCategories, triviaCategoriesAreLoading } = useContext(TriviaCategoriesContext);
+
+  console.log('StartMenuControls render!')
 
   useEffect(() => {
         setTriviaAPIEndpoint(
             TRIVIA_API_BASE_URL +
             new URLSearchParams({
-                categoryId,
-                numberOfQuestions,
-                questionDifficulty,
-                questionType
+                category: categoryId,
+                amount: numberOfQuestions,
+                difficulty: questionDifficulty,
+                type: questionType
             }).toString()
         )
     },
@@ -136,4 +138,4 @@ function StartMenuControls() {
   
 }
 
-export default StartMenuControls;
+export default memo(StartMenuControls);

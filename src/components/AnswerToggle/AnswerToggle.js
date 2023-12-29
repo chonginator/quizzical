@@ -11,6 +11,7 @@ const AnswerToggle = ({
     correctAnswer,
     ...delegated
 }) => {
+
     const Toggle = isGameOver ?
         ((answer === correctAnswer) ? CorrectToggle
             : (isSelected ? IncorrectToggle : ToggleButtonWrapper))

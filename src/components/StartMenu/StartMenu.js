@@ -8,6 +8,8 @@ import StartMenuControls from './StartMenuControls';
 function StartMenu({ setIsPlaying }) {
     const { triviaCategoriesAreLoading } = useContext(TriviaCategoriesContext);
 
+    console.log('StartMenu render!')
+
     return (
         <Wrapper>
             <Title>Quizzical</Title>

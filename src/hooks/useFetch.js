@@ -1,14 +1,14 @@
 import { useState } from 'react';
 
 function useFetch() {
-    const [data, setData] = useState(null)
+    const [data, setData] = useState()
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
 
-    const fetchMyAPI = async url => {
+    const fetchMyAPI = async endpoint => {
         try {
             setLoading(true)
-            const res = await fetch(url)
+            const res = await fetch(endpoint)
             const data = await res.json()
             setData(data)
         } catch (err) {

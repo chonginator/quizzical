@@ -18,15 +18,15 @@ const QuestionPane = ({
         <PaneWrapper>
             <PaneTitle>{question}</PaneTitle>
             <ButtonRow>
-                {answers.map(({ id: answerId, label: answer }) => {
+                {answers.map((answer) => {
                     return (
                         <AnswerToggle
-                            key={answerId}
-                            isSelected={currentAnswer === answerId}
+                            key={answer}
+                            isSelected={currentAnswer === answer}
                             disabled={isGameOver}
                             isGameOver={isGameOver}
                             correctAnswer={correctAnswer}
-                            onClick={() => handleSelectAnswer(answerId)}
+                            onClick={() => handleSelectAnswer(answer)}
                         >
                             {answer}
                         </AnswerToggle>

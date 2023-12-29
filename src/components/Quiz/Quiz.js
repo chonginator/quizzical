@@ -1,76 +1,52 @@
 import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 
-import he from 'he';
 import Confetti from 'react-confetti';
 
 import { COLOURS } from '../../constants';
-import { shuffle } from '../../utils';
-import useFetch from '../../hooks/useFetch';
 import useWindowScrollSize from '../../hooks/useWindowScrollSize';
 
-import { TriviaAPIContext } from '../TriviaAPIProvider';
+import { TriviaQuestionsContext } from '../TriviaQuestionsProvider';
 import Loader from '../Loader';
-import QuestionPane from '../QuestionPane';
 import Button from '../Button';
+import ToggleGroup from '../ToggleGroup';
+import AnswerToggle from '../AnswerToggle';
 
 function Quiz({ setIsPlaying }) {
     const [isGameOver, setIsGameOver] = useState(false)
-    const { fetchMyAPI, data, error, loading } = useFetch()
-    const [quizData, setQuizData] = useState([])
     const windowScrollSize = useWindowScrollSize()
-
-    const { triviaAPIEndpoint } = useContext(TriviaAPIContext);
+    const {
+        questions,
+        questionsAreLoading,
+        fetchAndSetQuestions
+    } = useContext(TriviaQuestionsContext);
+    const [userAnswers, setUserAnswers] = useState([]);
 
     useEffect(() => {
-        fetchMyAPI(triviaAPIEndpoint)
-    }, [triviaAPIEndpoint])
-    
-    // Format data for rendering
-    useEffect(() => {
-        if (data) {
-            setQuizData(data.results.map(
-                ({ question, correct_answer, incorrect_answers }, index) => {
-                    const correctAnswer = he.decode(correct_answer)
-                    const incorrectAnswers = incorrect_answers.map(answer => he.decode(answer))
-                    const answers = shuffle([correctAnswer, ...incorrectAnswers]).map(
-                        answer => ({
-                            id: answer,
-                            label: answer
-                        })
-                    )
+        setUserAnswers(questions.map(question => ({ questionId: question.questionId, selectedAnswer: null })));
+    }, [questions])
 
-                    return (
-                        {
-                            questionId: index,
-                            question: he.decode(question),
-                            answers: answers,
-                            correctAnswer: correctAnswer,
-                            selectedAnswer: null
-                        }
-                    )
-                }
-            ))
-        }
-    }, [data])
+    const handleSelectAnswer = (questionId, answer) => {
+        setUserAnswers(userAnswers.with(questionId, { questionId, selectedAnswer: answer }));
+    }
+
+    const isSelectedAnswer = (questionId, answer) => {
+        return userAnswers[questionId]?.selectedAnswer === answer;
+    }
 
     const handlePlayAgain = () => {
-        setIsGameOver(false)
-        fetchMyAPI(triviaAPIEndpoint)
+        setIsGameOver(false);
+        fetchAndSetQuestions();
     }
-    
-    let score
-    if (quizData) {
-        score = quizData.reduce(
-            (score, question) =>
-                score + (question.selectedAnswer === question.correctAnswer)
-        , 0)
-    }
+
+    const score = userAnswers.reduce(
+        (score, answer) => score + (answer.selectedAnswer === questions[answer.questionId].correctAnswer)
+    , 0)
 
     return (
         <Wrapper>
             {/* Show confetti if the player gets 100%! */}
-            {(isGameOver && (score === quizData.length)) &&
+            {(isGameOver && (score === questions.length)) &&
                 <Confetti
                     width={windowScrollSize.width}
                     height={windowScrollSize.height}
@@ -83,39 +59,38 @@ function Quiz({ setIsPlaying }) {
             }
 
             {/* Show a loader if the data is still loading */}
-            {loading && <Loader loading={loading}/>}
+            {questionsAreLoading && <Loader loading={questionsAreLoading}/>}
 
-            <div>
-                {!loading && quizData.map(
+            <>
+                {!questionsAreLoading && questions.map(
                     ({
                         questionId,
                         question,
                         answers,
                         correctAnswer,
-                        selectedAnswer
                     }) => {
                         return (
-                            <QuestionPane
-                                key={question}
-                                question={question}
-                                answers={answers}
-                                currentAnswer={selectedAnswer}
-                                isGameOver={isGameOver}
-                                correctAnswer={correctAnswer}
-                                handleSelectAnswer={answer => setQuizData(
-                                    prevQuestionData => prevQuestionData.map(
-                                        question => question.questionId === questionId ?
-                                            { ...question, selectedAnswer: answer }
-                                            : question
-                                    )
-                                )}
-                            />
+                            <ToggleGroup key={question} title={question}>
+                                {answers.map(answer => (
+                                    <AnswerToggle
+                                        key={answer}
+                                        isSelected={isSelectedAnswer(questionId, answer)}
+                                        disabled={isGameOver}
+                                        isGameOver={isGameOver}
+                                        correctAnswer={correctAnswer}
+                                        onClick={() => handleSelectAnswer(questionId, answer)}
+                                        aria-pressed={isSelectedAnswer(questionId, answer)}
+                                    >
+                                        {answer}
+                                    </AnswerToggle>
+                                ))}
+                            </ToggleGroup>
                         )
                     })
                 }
-            </div>
+            </>
 
-            {!loading && (!isGameOver ?
+            {!questionsAreLoading && (!isGameOver ?
                 <QuizFooter>
                     <Button onClick={() => setIsGameOver(true)}>
                         Check answers
@@ -124,7 +99,7 @@ function Quiz({ setIsPlaying }) {
                 :
                 <QuizFooter>
                     <Score>
-                        You scored: {score}/{quizData.length} correct answers
+                        You scored: {score}/{questions.length} correct answers
                     </Score>
                     <ButtonWrapper>
                         <Button onClick={handlePlayAgain}>Play again</Button>

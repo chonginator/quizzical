@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import TriviaAPIProvider from '../TriviaAPIProvider/TriviaAPIProvider.js';
-import TriviaCategoriesProvider from '../TriviaCategoriesProvider/index.js';
+import TriviaAPIEndpointProvider from '../TriviaAPIEndpointProvider';
+import TriviaCategoriesProvider from '../TriviaCategoriesProvider';
+import TriviaQuestionsProvider from '../TriviaQuestionsProvider';
+
 import StartMenu from '../StartMenu';
 import Quiz from '../Quiz';
 import GlobalStyles from '../GlobalStyles/GlobalStyles';
@@ -13,15 +15,19 @@ import blueBlob from '../../blue-blob.svg';
 function App() {
   const [isPlaying, setIsPlaying] = useState(false)
 
+  console.log('App render!');
+
   return (
-    <TriviaAPIProvider>
+    <TriviaAPIEndpointProvider>
       <TriviaCategoriesProvider>
         <Wrapper>
           <MaxWidthWrapper>
             {isPlaying ?
-              <Quiz
-                setIsPlaying={setIsPlaying}
-              />
+              <TriviaQuestionsProvider>
+                <Quiz
+                  setIsPlaying={setIsPlaying}
+                />
+              </TriviaQuestionsProvider>
               :
               <StartMenu
                 setIsPlaying={setIsPlaying}
@@ -32,7 +38,7 @@ function App() {
           </MaxWidthWrapper>
         </Wrapper>
       </TriviaCategoriesProvider>
-    </TriviaAPIProvider>
+    </TriviaAPIEndpointProvider>
   );
 }
 
