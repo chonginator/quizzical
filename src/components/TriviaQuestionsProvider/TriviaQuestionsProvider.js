@@ -2,7 +2,6 @@ import React, {
   useState,
   useEffect,
   createContext,
-  useContext,
   useCallback,
   useMemo,
   memo
@@ -13,12 +12,10 @@ import he from 'he';
 import { RATE_LIMIT_SECONDS } from '../../constants';
 import { shuffle } from '../../utils';
 
-import { TriviaAPIEndpointContext } from '../TriviaAPIEndpointProvider';
-
 export const TriviaQuestionsContext = createContext();
 
 function TriviaQuestionsProvider({ isPlaying, children }) {
-  const { triviaAPIEndpoint } = useContext(TriviaAPIEndpointContext);
+  const [triviaAPIEndpoint, setTriviaAPIEndpoint] = useState();
   const [questions, setQuestions] = useState([]);
   const [questionsStatus, setQuestionsStatus] = useState('idle');
   const [rateLimitSecondsLeft, setRateLimitSecondsLeft] = useState(null);
@@ -95,6 +92,8 @@ function TriviaQuestionsProvider({ isPlaying, children }) {
 
   const value = useMemo(() => (
     {
+      triviaAPIEndpoint,
+      setTriviaAPIEndpoint,
       questions: formattedQuestions,
       questionsAreLoading: questionsStatus === 'loading',
       fetchAndSetQuestions,
@@ -102,6 +101,8 @@ function TriviaQuestionsProvider({ isPlaying, children }) {
       resetRateLimitSecondsLeft
     }
   ), [
+      triviaAPIEndpoint,
+      setTriviaAPIEndpoint,
       fetchAndSetQuestions,
       formattedQuestions, 
       questionsStatus, 

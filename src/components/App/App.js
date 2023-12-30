@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-import TriviaAPIEndpointProvider from '../TriviaAPIEndpointProvider';
 import TriviaCategoriesProvider from '../TriviaCategoriesProvider';
 import TriviaQuestionsProvider from '../TriviaQuestionsProvider';
 
@@ -13,24 +12,22 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false)
 
   return (
-    <TriviaAPIEndpointProvider>
-      <TriviaCategoriesProvider>
-        <TriviaQuestionsProvider isPlaying={isPlaying}>
-          <AppWrapper>
-            {isPlaying ?
-              <Trivia
-                setIsPlaying={setIsPlaying}
-              />
-              :
-              <StartMenu
+    <TriviaCategoriesProvider>
+      <TriviaQuestionsProvider isPlaying={isPlaying}>
+        <AppWrapper>
+          {isPlaying ?
+            <Trivia
               setIsPlaying={setIsPlaying}
-              />
-            }
-            <GlobalStyles />
-          </AppWrapper>
-        </TriviaQuestionsProvider>
-      </TriviaCategoriesProvider>
-    </TriviaAPIEndpointProvider>
+            />
+            :
+            <StartMenu
+              setIsPlaying={setIsPlaying}
+            />
+          }
+          <GlobalStyles />
+        </AppWrapper>
+      </TriviaQuestionsProvider>
+    </TriviaCategoriesProvider>
   );
 }
 

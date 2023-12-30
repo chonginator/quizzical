@@ -14,7 +14,7 @@ import {
     questionTypeOptions
 } from './StartMenu.helpers';
 
-import { TriviaAPIEndpointContext } from '../TriviaAPIEndpointProvider';
+import { TriviaQuestionsContext } from '../TriviaQuestionsProvider';
 import { TriviaCategoriesContext } from '../TriviaCategoriesProvider';
 import ToggleGroup, {
     ToggleGroupRow,
@@ -29,8 +29,8 @@ function StartMenuControls() {
   const [questionDifficulty, setQuestionDifficulty] = useState(questionDifficultyOptions[0].id);
   const [questionType, setQuestionType] = useState(questionTypeOptions[0].id);
 
-  const { setTriviaAPIEndpoint } = useContext(TriviaAPIEndpointContext);
   const { triviaCategories, triviaCategoriesAreLoading } = useContext(TriviaCategoriesContext);
+  const { setTriviaAPIEndpoint } = useContext(TriviaQuestionsContext);
 
   useEffect(() => {
         setTriviaAPIEndpoint(
