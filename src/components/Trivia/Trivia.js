@@ -99,10 +99,10 @@ function Trivia({ setIsPlaying }) {
 
     function TriviaQuestions() {
         return (
-            questions.map(({ questionId, question, answers, correctAnswer }) => {
+            questions.map(({ questionId, question, answers, correctAnswer }, index) => {
                 return (
                     <ToggleGroup key={question}>
-                        <ToggleGroupTitle>{question}</ToggleGroupTitle>
+                        <ToggleGroupTitle>{questionId + 1}. {question}</ToggleGroupTitle>
                         <ToggleGroupRow>
                             {answers.map(answer => (
                                 <ToggleGroupAnswer
