@@ -27,7 +27,9 @@ function Trivia({ setIsPlaying }) {
     const {
         questions,
         questionsAreLoading,
-        fetchAndSetQuestions
+        fetchAndSetQuestions,
+        rateLimitSecondsLeft,
+        resetRateLimitSecondsLeft
     } = useContext(TriviaQuestionsContext);
     const [userAnswers, setUserAnswers] = useState([]);
 
@@ -35,9 +37,8 @@ function Trivia({ setIsPlaying }) {
         setUserAnswers(questions.map(question => ({ questionId: question.questionId, selectedAnswer: null })));
     }, [questions])
 
-    
     const score = userAnswers.reduce(
-        (score, answer) => score + (answer.selectedAnswer === questions[answer.questionId].correctAnswer)
+        (score, answer) => score + (answer.selectedAnswer === questions[answer.questionId]?.correctAnswer)
     , 0)
 
     const isWinner = isGameOver && score === questions.length;
@@ -52,7 +53,8 @@ function Trivia({ setIsPlaying }) {
                         You scored: {score}/{questions.length} correct answers
                     </Score>
                     <ButtonWrapper>
-                        <Button onClick={handlePlayAgain}>Play again</Button>
+                        <Button onClick={handlePlayAgain} disabled={rateLimitSecondsLeft}>
+                            Play again {rateLimitSecondsLeft > 0 && `(${rateLimitSecondsLeft})`}</Button>
                         <Button onClick={() => setIsPlaying(false)}>
                             Menu
                         </Button>
@@ -87,7 +89,7 @@ function Trivia({ setIsPlaying }) {
                     <ToggleGroupLoadingTitle />
                     <ToggleGroupRow>
                         {new Array(DEFAULT_NUMBER_OF_ANSWERS).fill().map((_, index) => (
-                            <ToggleGroupLoadingItem />
+                            <ToggleGroupLoadingItem key={index} />
                         ))}
                     </ToggleGroupRow>
                 </ToggleGroup>
@@ -133,6 +135,7 @@ function Trivia({ setIsPlaying }) {
     function handlePlayAgain() {
         setIsGameOver(false);
         fetchAndSetQuestions();
+        resetRateLimitSecondsLeft();
         scrollToTop();
     }
 }

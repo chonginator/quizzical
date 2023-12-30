@@ -1,4 +1,4 @@
-import React, { createContext, useMemo } from 'react';
+import React, { createContext, useCallback, useMemo, memo } from 'react';
 import useSWR from 'swr';
 
 import {
@@ -9,11 +9,7 @@ import {
 export const TriviaCategoriesContext = createContext();
 
 function TriviaCategoriesProvider({ children }) {
-    const { data, error: triviaCategoriesError, isLoading: triviaCategoriesAreLoading } = useSWR(TRIVIA_CATEGORIES_URL, fetcher)
-
-    console.log('TriviaCategoriesProvider render!')
-
-  async function fetcher(url) {
+  const fetcher = useCallback(async (url) => {
     const res = await fetch(url)
     const data = await res.json()
 
@@ -22,7 +18,8 @@ function TriviaCategoriesProvider({ children }) {
     }
 
     return data;
-  }
+  }, [])
+  const { data, error: triviaCategoriesError, isLoading: triviaCategoriesAreLoading } = useSWR(TRIVIA_CATEGORIES_URL, fetcher)
 
   const value = useMemo(() => {
     const triviaCategories = data ? [ANY_CATEGORY, ...data.trivia_categories] : [];
@@ -36,4 +33,4 @@ function TriviaCategoriesProvider({ children }) {
   );
 }
 
-export default TriviaCategoriesProvider;
+export default memo(TriviaCategoriesProvider);

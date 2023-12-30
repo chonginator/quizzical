@@ -9,35 +9,29 @@ import StartMenu from '../StartMenu';
 import Trivia from '../Trivia';
 import GlobalStyles from '../GlobalStyles/GlobalStyles';
 
-
 function App() {
   const [isPlaying, setIsPlaying] = useState(false)
-
-  console.log('App render!');
 
   return (
     <TriviaAPIEndpointProvider>
       <TriviaCategoriesProvider>
-        <AppWrapper>
-          {isPlaying ?
-            <TriviaQuestionsProvider>
+        <TriviaQuestionsProvider isPlaying={isPlaying}>
+          <AppWrapper>
+            {isPlaying ?
               <Trivia
                 setIsPlaying={setIsPlaying}
               />
-            </TriviaQuestionsProvider>
-            :
-            <StartMenu
+              :
+              <StartMenu
               setIsPlaying={setIsPlaying}
-            />
-          }
-
-          <GlobalStyles />
-        </AppWrapper>
+              />
+            }
+            <GlobalStyles />
+          </AppWrapper>
+        </TriviaQuestionsProvider>
       </TriviaCategoriesProvider>
     </TriviaAPIEndpointProvider>
   );
 }
-
-
 
 export default App;

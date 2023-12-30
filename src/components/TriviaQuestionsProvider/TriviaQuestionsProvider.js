@@ -1,27 +1,39 @@
-import React, { useState, useEffect, createContext, useContext, useCallback, useMemo } from 'react';
+import React, {
+  useState,
+  useEffect,
+  createContext,
+  useContext,
+  useCallback,
+  useMemo,
+  memo
+} from 'react';
 
 import he from 'he';
 
+import { RATE_LIMIT_SECONDS } from '../../constants';
 import { shuffle } from '../../utils';
 
 import { TriviaAPIEndpointContext } from '../TriviaAPIEndpointProvider';
 
 export const TriviaQuestionsContext = createContext();
 
-function TriviaQuestionsProvider({ children }) {
+function TriviaQuestionsProvider({ isPlaying, children }) {
   const { triviaAPIEndpoint } = useContext(TriviaAPIEndpointContext);
   const [questions, setQuestions] = useState([]);
   const [questionsStatus, setQuestionsStatus] = useState('idle');
+  const [rateLimitSecondsLeft, setRateLimitSecondsLeft] = useState(null);
 
   const fetchAndSetQuestions = useCallback(async () => {
+    if (!isPlaying) {
+      return;
+    }
     const data = await fetchQuestions(triviaAPIEndpoint);
-    setQuestions(data.results);
-  }, [triviaAPIEndpoint]);
-
+    setQuestions(data?.results || []);
+  }, [isPlaying, triviaAPIEndpoint]);
+  
   useEffect(() => {
     fetchAndSetQuestions();
   }, [fetchAndSetQuestions])
-  
 
   const fetchQuestions = async endpoint => {
     setQuestionsStatus('loading');
@@ -36,34 +48,67 @@ function TriviaQuestionsProvider({ children }) {
     }
   }
 
-  console.log('TriviaQuestionsProvider render!');
-    
+  useEffect(() => {
+    const firstPlaythrough = !isPlaying && !rateLimitSecondsLeft;
+
+    if (firstPlaythrough) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      if (rateLimitSecondsLeft === null) {
+        setRateLimitSecondsLeft(RATE_LIMIT_SECONDS);
+      } else {
+        if (rateLimitSecondsLeft > 0) {
+          setRateLimitSecondsLeft(rateLimitSecondsLeft - 1);
+        }
+      }
+    }, 1000)
+
+    return () => window.clearTimeout(timeoutId);
+  }, [isPlaying, rateLimitSecondsLeft])
+
+  const resetRateLimitSecondsLeft = useCallback(() => {
+    setRateLimitSecondsLeft(RATE_LIMIT_SECONDS);
+  }, [])
+  
   function formatQuestions(questions) {
     return questions.map(
       ({ question, correct_answer, incorrect_answers }, index) => {
-          const correctAnswer = he.decode(correct_answer)
-          const incorrectAnswers = incorrect_answers.map(answer => he.decode(answer))
-          const answers = shuffle([correctAnswer, ...incorrectAnswers])
+        const correctAnswer = he.decode(correct_answer)
+        const incorrectAnswers = incorrect_answers.map(answer => he.decode(answer))
+        const answers = shuffle([correctAnswer, ...incorrectAnswers])
 
-          return (
-              {
-                  questionId: index,
-                  question: he.decode(question),
-                  answers,
-                  correctAnswer: correctAnswer,
-              }
-          )
+        return (
+          {
+            questionId: index,
+            question: he.decode(question),
+            answers,
+            correctAnswer: correctAnswer,
+          }
+        )
       }
     )
   }
 
+  const formattedQuestions = useMemo(() => formatQuestions(questions), [questions]);
+
   const value = useMemo(() => (
     {
-      questions: formatQuestions(questions),
+      questions: formattedQuestions,
       questionsAreLoading: questionsStatus === 'loading',
-      fetchAndSetQuestions
+      fetchAndSetQuestions,
+      rateLimitSecondsLeft,
+      resetRateLimitSecondsLeft
     }
-  ), [fetchAndSetQuestions, questions, questionsStatus])
+  ), [
+      fetchAndSetQuestions,
+      formattedQuestions, 
+      questionsStatus, 
+      rateLimitSecondsLeft, 
+      resetRateLimitSecondsLeft
+    ]
+  )
 
   return (
     <TriviaQuestionsContext.Provider
@@ -73,4 +118,4 @@ function TriviaQuestionsProvider({ children }) {
   );
 }
 
-export default TriviaQuestionsProvider;
+export default memo(TriviaQuestionsProvider);

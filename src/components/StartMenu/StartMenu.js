@@ -1,14 +1,22 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 
+import { scrollToTop } from '../../utils';
+
 import { TriviaCategoriesContext } from '../TriviaCategoriesProvider';
+import { TriviaQuestionsContext } from '../TriviaQuestionsProvider';
 import Button from '../Button';
 import StartMenuControls from './StartMenuControls';
 
 function StartMenu({ setIsPlaying }) {
     const { triviaCategoriesAreLoading } = useContext(TriviaCategoriesContext);
+    const { rateLimitSecondsLeft, resetRateLimitSecondsLeft } = useContext(TriviaQuestionsContext)
 
-    console.log('StartMenu render!')
+    function handleStartQuiz() {
+        setIsPlaying(true);
+        resetRateLimitSecondsLeft();
+        scrollToTop();
+    }
 
     return (
         <Wrapper>
@@ -18,8 +26,8 @@ function StartMenu({ setIsPlaying }) {
 
             <StartMenuControls />
 
-            <StartButton onClick={() => setIsPlaying(true)} disabled={triviaCategoriesAreLoading}>
-                Start quiz
+            <StartButton onClick={handleStartQuiz} disabled={triviaCategoriesAreLoading || rateLimitSecondsLeft}>
+                Start quiz {rateLimitSecondsLeft > 0 && `(${rateLimitSecondsLeft})`}
             </StartButton>
         </Wrapper>
     )

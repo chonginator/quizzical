@@ -1,6 +1,8 @@
 export const TRIVIA_CATEGORIES_URL = 'https://opentdb.com/api_category.php';
 export const TRIVIA_API_BASE_URL = 'https://opentdb.com/api.php?';
 
+export const RATE_LIMIT_SECONDS = 5;
+
 export const NUMBER_OF_QUESTIONS_OPTIONS = [10, 20, 30, 40, 50];
 export const QUESTION_DIFFICULTY_OPTIONS = ['easy', 'medium', 'hard'];
 export const QUESTION_TYPE_OPTIONS = ['multiple', 'boolean'];
@@ -9,7 +11,7 @@ export const ANY_CATEGORY = { id: '', name: 'Any Category' };
 export const ANY_DIFFICULTY = { id: '', name: 'Any Difficulty' };
 export const ANY_QUESTION_TYPE = { id: '', name: 'Any Type' };
 
-export const DEFAULT_NUMBER_OF_CATEGORIES = 24;
+export const DEFAULT_NUMBER_OF_CATEGORIES = 20;
 export const DEFAULT_NUMBER_OF_QUESTION_AMOUNTS = 5;
 export const DEFAULT_NUMBER_OF_DIFFICULTIES = 4;
 export const DEFAULT_NUMBER_OF_QUESTION_TYPES = 3;

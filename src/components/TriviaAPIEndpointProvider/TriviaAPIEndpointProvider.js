@@ -1,13 +1,9 @@
-import React, { createContext, useState, useMemo } from 'react';
-
-import { TRIVIA_API_BASE_URL } from '../../constants';
+import React, { createContext, useState, useMemo, memo } from 'react';
 
 export const TriviaAPIEndpointContext = createContext();
 
 function TriviaAPIEndpointProvider({ children }) {
-  const [triviaAPIEndpoint, setTriviaAPIEndpoint] = useState(TRIVIA_API_BASE_URL);
-
-  console.log('TriviaAPIEndpointProvider render!')
+  const [triviaAPIEndpoint, setTriviaAPIEndpoint] = useState();
 
   const value = useMemo(() => (
     { triviaAPIEndpoint, setTriviaAPIEndpoint }
@@ -20,4 +16,4 @@ function TriviaAPIEndpointProvider({ children }) {
   );
 }
 
-export default TriviaAPIEndpointProvider;
+export default memo(TriviaAPIEndpointProvider);

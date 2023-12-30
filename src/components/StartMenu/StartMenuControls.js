@@ -16,7 +16,12 @@ import {
 
 import { TriviaAPIEndpointContext } from '../TriviaAPIEndpointProvider';
 import { TriviaCategoriesContext } from '../TriviaCategoriesProvider';
-import ToggleGroup, { ToggleGroupRow, ToggleGroupTitle, ToggleGroupItem, ToggleGroupLoadingItem } from '../ToggleGroup';
+import ToggleGroup, {
+    ToggleGroupRow,
+    ToggleGroupTitle,
+    ToggleGroupItem,
+    ToggleGroupLoadingItem
+} from '../ToggleGroup';
 
 function StartMenuControls() {
   const [categoryId, setCategoryId] = useState("");
@@ -26,8 +31,6 @@ function StartMenuControls() {
 
   const { setTriviaAPIEndpoint } = useContext(TriviaAPIEndpointContext);
   const { triviaCategories, triviaCategoriesAreLoading } = useContext(TriviaCategoriesContext);
-
-  console.log('StartMenuControls render!')
 
   useEffect(() => {
         setTriviaAPIEndpoint(
