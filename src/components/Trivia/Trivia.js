@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 
 import Confetti from 'react-confetti';
@@ -31,11 +31,9 @@ function Trivia({ setIsPlaying }) {
         rateLimitSecondsLeft,
         resetRateLimitSecondsLeft
     } = useContext(TriviaQuestionsContext);
-    const [userAnswers, setUserAnswers] = useState([]);
-
-    useEffect(() => {
-        setUserAnswers(questions.map(question => ({ questionId: question.questionId, selectedAnswer: null })));
-    }, [questions])
+    const [userAnswers, setUserAnswers] = useState(() => 
+        questions.map(question => ({ questionId: question.questionId, selectedAnswer: null }))
+    );
 
     const score = userAnswers.reduce(
         (score, answer) => score + (answer.selectedAnswer === questions[answer.questionId]?.correctAnswer)
