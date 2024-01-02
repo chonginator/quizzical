@@ -21,16 +21,16 @@ function TriviaQuestionsProvider({ isPlaying, children }) {
   const [rateLimitSecondsLeft, setRateLimitSecondsLeft] = useState(null);
 
   const fetchAndSetQuestions = useCallback(async () => {
+    const data = await fetchQuestions(triviaAPIEndpoint);
+    setQuestions(data?.results || []);
+  }, [triviaAPIEndpoint]);
+  
+  useEffect(() => {
     if (!isPlaying) {
       return;
     }
-    const data = await fetchQuestions(triviaAPIEndpoint);
-    setQuestions(data?.results || []);
-  }, [isPlaying, triviaAPIEndpoint]);
-  
-  useEffect(() => {
     fetchAndSetQuestions();
-  }, [fetchAndSetQuestions])
+  }, [fetchAndSetQuestions, isPlaying])
 
   const fetchQuestions = async endpoint => {
     setQuestionsStatus('loading');
