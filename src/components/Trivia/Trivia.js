@@ -34,11 +34,11 @@ function Trivia({ handleStopPlaying }) {
     const [userAnswers, setUserAnswers] = useState([]);
 
     useEffect(() => {
-        setUserAnswers(questions.map(question => ({ questionId: question.questionId, selectedAnswer: null })));
+        setUserAnswers(questions.map(() => null));
     }, [questions])
 
     const score = userAnswers.reduce(
-        (score, answer) => score + (answer.selectedAnswer === questions[answer.questionId]?.correctAnswer)
+        (score, answer, index) => score + (answer === questions[index]?.correctAnswer)
     , 0)
 
     const isWinner = isGameOver && score === questions.length;
@@ -99,20 +99,20 @@ function Trivia({ handleStopPlaying }) {
 
     function TriviaQuestions() {
         return (
-            questions.map(({ questionId, question, answers, correctAnswer }, index) => {
+            questions.map(({ question, answers, correctAnswer }, index) => {
                 return (
                     <ToggleGroup key={question}>
-                        <ToggleGroupTitle>{questionId + 1}. {question}</ToggleGroupTitle>
+                        <ToggleGroupTitle>{index + 1}. {question}</ToggleGroupTitle>
                         <ToggleGroupRow>
                             {answers.map(answer => (
                                 <ToggleGroupAnswer
                                     key={answer}
-                                    isSelected={isSelectedAnswer(questionId, answer)}
+                                    isSelected={isSelectedAnswer(index, answer)}
                                     disabled={isGameOver}
                                     isGameOver={isGameOver}
                                     correctAnswer={correctAnswer}
-                                    onClick={() => handleSelectAnswer(questionId, answer)}
-                                    aria-pressed={isSelectedAnswer(questionId, answer)}
+                                    onClick={() => handleSelectAnswer(index, answer)}
+                                    aria-pressed={isSelectedAnswer(index, answer)}
                                 >
                                     {answer}
                                 </ToggleGroupAnswer>
@@ -124,12 +124,12 @@ function Trivia({ handleStopPlaying }) {
         )
     }
 
-    function handleSelectAnswer(questionId, answer) {
-        setUserAnswers(userAnswers.with(questionId, { questionId, selectedAnswer: answer }));
+    function handleSelectAnswer(index, answer) {
+        setUserAnswers(userAnswers.with(index, answer));
     }
 
-    function isSelectedAnswer(questionId, answer) {
-        return userAnswers[questionId]?.selectedAnswer === answer;
+    function isSelectedAnswer(index, answer) {
+        return userAnswers[index] === answer;
     }
 
     function handlePlayAgain() {

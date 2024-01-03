@@ -17,6 +17,8 @@ export const TriviaQuestionsContext = createContext();
 function TriviaQuestionsProvider({ isPlaying, children }) {
   const [triviaAPIEndpoint, setTriviaAPIEndpoint] = useState();
   const [questions, setQuestions] = useState([]);
+
+  // 'idle' | 'loading' | 'error'
   const [questionsStatus, setQuestionsStatus] = useState('idle');
   const [rateLimitSecondsLeft, setRateLimitSecondsLeft] = useState(null);
 
@@ -78,7 +80,6 @@ function TriviaQuestionsProvider({ isPlaying, children }) {
 
         return (
           {
-            questionId: index,
             question: he.decode(question),
             answers,
             correctAnswer: correctAnswer,
