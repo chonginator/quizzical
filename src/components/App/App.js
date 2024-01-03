@@ -11,17 +11,25 @@ import GlobalStyles from '../GlobalStyles/GlobalStyles';
 function App() {
   const [isPlaying, setIsPlaying] = useState(false)
 
+  function handleStartPlaying() {
+    setIsPlaying(true);
+  }
+
+  function handleStopPlaying() {
+    setIsPlaying(false);
+  }
+
   return (
     <TriviaCategoriesProvider>
       <TriviaQuestionsProvider isPlaying={isPlaying}>
         <AppWrapper>
           {isPlaying ?
             <Trivia
-              setIsPlaying={setIsPlaying}
+              handleStopPlaying={handleStopPlaying}
             />
             :
             <StartMenu
-              setIsPlaying={setIsPlaying}
+              handleStartPlaying={handleStartPlaying}
             />
           }
           <GlobalStyles />

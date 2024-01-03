@@ -21,7 +21,7 @@ import ToggleGroup, {
     ToggleGroupAnswer
 } from '../ToggleGroup';
 
-function Trivia({ setIsPlaying }) {
+function Trivia({ handleStopPlaying }) {
     const [isGameOver, setIsGameOver] = useState(false)
     const windowScrollSize = useWindowScrollSize()
     const {
@@ -55,7 +55,7 @@ function Trivia({ setIsPlaying }) {
                     <ButtonWrapper>
                         <Button onClick={handlePlayAgain} disabled={rateLimitSecondsLeft}>
                             Play again {rateLimitSecondsLeft > 0 && `(${rateLimitSecondsLeft})`}</Button>
-                        <Button onClick={() => setIsPlaying(false)}>
+                        <Button onClick={handleStopPlaying}>
                             Menu
                         </Button>
                     </ButtonWrapper>

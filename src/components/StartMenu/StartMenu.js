@@ -8,12 +8,12 @@ import { TriviaQuestionsContext } from '../TriviaQuestionsProvider';
 import Button from '../Button';
 import StartMenuControls from './StartMenuControls';
 
-function StartMenu({ setIsPlaying }) {
+function StartMenu({ handleStartPlaying }) {
     const { triviaCategoriesAreLoading } = useContext(TriviaCategoriesContext);
     const { rateLimitSecondsLeft, resetRateLimitSecondsLeft } = useContext(TriviaQuestionsContext)
 
     function handleStartQuiz() {
-        setIsPlaying(true);
+        handleStartPlaying();
         resetRateLimitSecondsLeft();
         scrollToTop();
     }
